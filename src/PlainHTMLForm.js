@@ -38,7 +38,9 @@ export default props => {
           />
         </div>
         <input name="html-bot-field" type="hidden" />
-        <button className="btn btn-lg btn-outline-primary m-3">Submit</button>
+        <button className="btn btn-lg btn-outline-primary m-3" type="submit">
+          Submit
+        </button>
       </form>
     </div>
   );
