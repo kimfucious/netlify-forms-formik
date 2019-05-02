@@ -16,9 +16,14 @@ const App = () => {
         <span className="display-4 mx-3">+</span>
         <img src={formikLogo} alt="formik logo" />
       </div>
-      <div className="display-4 m-5">Netlify Forms with Formik Demo</div>
+      <div className="display-4 m-5">Netlify Forms with Formik</div>
       <Formik
-        initialValues={{ email: "", username: "" }}
+        initialValues={{
+          "bot-field": "",
+          "form-name": "contact",
+          email: "",
+          username: ""
+        }}
         validate={values => {
           let errors = {};
           if (!values.email) {
@@ -37,7 +42,6 @@ const App = () => {
           setSubmitting(true);
           console.log(values);
           const data = {
-            "form-name": "contact",
             ...values
           };
           const options = {
@@ -65,11 +69,14 @@ const App = () => {
           values
         }) => (
           <form
-            onSubmit={handleSubmit}
-            name="contact"
+            data-netlify="true"
+            data-netlify-honeypot="bot-field"
             className="d-flex flex-column align-items-center"
+            name="contact"
+            onSubmit={handleSubmit}
           >
-            <input type="hidden" name="form-name" value="contact" />
+            <input type="hidden" name="form-name" value={values["form-name"]} />
+            <input type="hidden" name="bot-field" value={values["bot-field"]} />
             <div className="form-group">
               <label
                 className="col-form-label col-form-label-lg"
@@ -86,7 +93,7 @@ const App = () => {
                 value={values.username}
               />
               {errors.username && touched.username ? (
-                <div className="text-danger">{errors.username}</div>
+                <div className="invalid-feedback">{errors.username}</div>
               ) : null}
             </div>
             <div className="form-group">
@@ -105,7 +112,7 @@ const App = () => {
                 value={values.email}
               />
               {errors.email && touched.email ? (
-                <div className="text-danger">{errors.email}</div>
+                <div className="invalid-feedback">{errors.email}</div>
               ) : null}
             </div>
             <button
@@ -126,7 +133,7 @@ const App = () => {
           </form>
         )}
       </Formik>
-      <form
+      {/* <form
         name="contact"
         data-netlify="true"
         netlify-honeypot="bot-field"
@@ -134,7 +141,7 @@ const App = () => {
       >
         <input type="text" name="name" />
         <input type="email" name="email" />
-      </form>
+      </form> */}
     </div>
   );
 };
