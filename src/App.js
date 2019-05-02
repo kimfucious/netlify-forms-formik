@@ -56,7 +56,10 @@ const App = () => {
         }}
       >
         {({ isSubmitting }) => (
-          <Form className="d-flex flex-column align-items-center">
+          <Form
+            name="contact"
+            className="d-flex flex-column align-items-center"
+          >
             <input type="hidden" name="form-name" value="contact" />
             <div className="form-group">
               <label
