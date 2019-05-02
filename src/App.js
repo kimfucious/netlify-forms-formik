@@ -102,7 +102,7 @@ const App = () => {
                 onBlur={handleBlur}
                 onChange={handleChange}
                 type="email"
-                value={values.username}
+                value={values.email}
               />
               {errors.email && touched.email ? (
                 <div className="text-danger">{errors.email}</div>
