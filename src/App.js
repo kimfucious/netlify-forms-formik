@@ -55,8 +55,9 @@ const App = () => {
           }
         }}
       >
-        {({ isSubmitting }) => (
-          <Form
+        {({ isSubmitting, handleSubmit }) => (
+          <form
+            onSubmit={handleSubmit}
             name="contact"
             className="d-flex flex-column align-items-center"
           >
@@ -112,7 +113,7 @@ const App = () => {
             >
               <img src={octocat} alt="octocat" height="30px" width="30px" />
             </a>
-          </Form>
+          </form>
         )}
       </Formik>
       <form
