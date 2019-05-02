@@ -14,7 +14,7 @@ export default props => {
           "formik-bot-field": "",
           "formik-form-name": "formik-form",
           formikEmail: "",
-          formikUsernmae: ""
+          formikUsername: ""
         }}
         validate={values => {
           let errors = {};
