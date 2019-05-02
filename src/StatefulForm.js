@@ -14,7 +14,7 @@ export default props => {
   const handleChange = e => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
-  const handleSubmit = async e => {
+  const handleSubmit = async () => {
     console.log(form);
     const data = {
       ...form
@@ -41,7 +41,6 @@ export default props => {
         data-netlify="true"
         name="stateful-form"
         netlify-honeypot="stateful-bot-field"
-        onSubmit={handleSubmit}
       >
         <div className="form-group">
           <label
@@ -79,7 +78,12 @@ export default props => {
           type="hidden"
           value={form["stateful-bot-field"]}
         />
-        <button className="btn btn-lg btn-outline-primary m-3">Submit</button>
+        <button
+          className="btn btn-lg btn-outline-primary m-3"
+          onClick={() => handleSubmit()}
+        >
+          Submit
+        </button>
         {message ? <div className="text-danger">{message}</div> : null}
       </form>
     </div>
