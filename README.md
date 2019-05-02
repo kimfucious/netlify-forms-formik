@@ -14,6 +14,8 @@ Because setting up Netlify Forms with React is not always as simple as it may se
 
 [This]("https://www.netlify.com/blog/2017/07/20/how-to-integrate-netlifys-form-handling-in-a-react-app/") is a very informative article; however, after poring over it several times, I still had trouble getting everything to work.
 
+Reading [this]("https://community.netlify.com/t/common-issue-how-to-debug-your-form/92") send me on many wild goose-chases.
+
 ## Initial Setup (doesn't work out of the box)
 
 - [ Create React App ]("https://github.com/facebook/create-react-app")
