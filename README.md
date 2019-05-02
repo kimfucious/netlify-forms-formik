@@ -12,17 +12,16 @@ Don't use Formik's `Form`, `Field`, and `ErrorMessage` components. Use HTML elem
 
 Because setting up Netlify Forms with React is not always as simple as it may seem.
 
-[This]("https://www.netlify.com/blog/2017/07/20/how-to-integrate-netlifys-form-handling-in-a-react-app/") is a very informative article; however, after poring over it several times, I still had trouble getting everything to work.
+[This](https://www.netlify.com/blog/2017/07/20/how-to-integrate-netlifys-form-handling-in-a-react-app/) is a very informative article; however, after poring over it several times, I still had trouble getting everything to work.
 
-Reading [this]("https://community.netlify.com/t/common-issue-how-to-debug-your-form/92") send me on many wild goose-chases.
+Reading [this](https://community.netlify.com/t/common-issue-how-to-debug-your-form/92) send me on many wild goose-chases.
 
 ## Initial Setup (doesn't work out of the box)
 
-- [ Create React App ]("https://github.com/facebook/create-react-app")
-- [ Axios ]("https://www.npmjs.com/package/axios") ( with [ qs ]("https://www.npmjs.com/package/qs") ) for the post
-- Bootswatch ([ Simplex ]("https://bootswatch.com/simplex/")) for CSS
-- [ Formik ]("https://www.npmjs.com/package/formik")
-- All code in one file (`App.js`) to keep in simple
+- [Create React App](https://github.com/facebook/create-react-app)
+- [Axios](https://www.npmjs.com/package/axios) ( with [ qs ](https://www.npmjs.com/package/qs) ) for the post
+- Bootswatch ([ Simplex ](https://bootswatch.com/simplex/)) for CSS
+- [Formik](https://www.npmjs.com/package/formik)
 
 With the initial setup (below), submitting the form when hosted on Netlify will return a 404 error.
 
