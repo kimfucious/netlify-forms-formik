@@ -12,9 +12,9 @@ const App = () => {
   return (
     <div className="d-flex flex-column align-items-center justify-content-center w-100 vh-100">
       <div className="d-flex align-items-center justify-content-center text-muted">
-        <img src={netlifyLogo} alt="netlify" />
+        <img src={netlifyLogo} alt="netlify logo" />
         <span className="display-4 mx-3">+</span>
-        <img src={formikLogo} alt="formik" />
+        <img src={formikLogo} alt="formik logo" />
       </div>
       <div className="display-4 m-5">Netlify Forms with Formik Demo</div>
       <Formik
@@ -57,6 +57,7 @@ const App = () => {
       >
         {({ isSubmitting }) => (
           <Form className="d-flex flex-column align-items-center">
+            <Field type="hidden" name="form-name" value="contact" />
             <div className="form-group">
               <label
                 className="col-form-label col-form-label-lg"
@@ -111,6 +112,15 @@ const App = () => {
           </Form>
         )}
       </Formik>
+      <form
+        name="contact"
+        data-netlify="true"
+        netlify-honeypot="bot-field"
+        hidden
+      >
+        <input type="text" name="name" />
+        <input type="email" name="email" />
+      </form>
     </div>
   );
 };
