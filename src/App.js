@@ -15,7 +15,9 @@ const App = () => {
         <span className="display-4 mx-4">+</span>
         <img src={formikLogo} alt="formik logo" />
       </div>
-      <div className="display-4 m-5">Netlify Forms with Formik</div>
+      <div className="display-4 m-5" style={{ fontSize: "48px" }}>
+        Netlify Forms with Formik
+      </div>
       <div className="d-flex justify-content-around w-100 mt-3">
         <PlainHTMLForm type="HTML Form" />
         <StatefulForm type="Stateful React Form" />
