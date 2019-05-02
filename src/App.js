@@ -1,6 +1,6 @@
 import React from "react";
 import "./App.css";
-import netlifyLogo from "./images/netlify.png";
+import netlifyLogo from "./images/netlify-logo-alt.png";
 import formikLogo from "./images/formik.png";
 import octocat from "./images/octocat.jpg";
 import StatefulForm from "./StatefulForm";
@@ -12,7 +12,7 @@ const App = () => {
     <div className="container d-flex flex-column align-items-center justify-content-center w-100 vh-100">
       <div className="d-flex align-items-center justify-content-center text-muted">
         <img src={netlifyLogo} alt="netlify logo" />
-        <span className="display-4 mx-3">+</span>
+        <span className="display-4 mx-4">+</span>
         <img src={formikLogo} alt="formik logo" />
       </div>
       <div className="display-4 m-5">Netlify Forms with Formik</div>
