@@ -4,10 +4,10 @@ import qs from "qs";
 
 export default props => {
   const initialFormState = {
-    username: "",
-    email: "",
+    statefulUsername: "",
+    statefulEmail: "",
     "stateful-bot-field": "",
-    "form-name": "stateful"
+    "form-name": "stateful-form"
   };
   const [message, setMessage] = useState(false);
   const [form, setForm] = useState(initialFormState);
@@ -16,7 +16,6 @@ export default props => {
   };
   const handleSubmit = async e => {
     console.log(form);
-    e.preventDefault();
     const data = {
       ...form
     };
@@ -40,35 +39,38 @@ export default props => {
       <form
         className="d-flex flex-column align-items-center"
         data-netlify="true"
-        name="stateful"
+        name="stateful-form"
         netlify-honeypot="stateful-bot-field"
         onSubmit={handleSubmit}
       >
         <div className="form-group">
           <label
             className="col-form-label col-form-label-lg"
-            htmlFor="username"
+            htmlFor="statefulUsername"
           >
             Name
           </label>
           <input
             className="form-control form-control-lg"
-            value={form.username}
+            value={form.statefulUsername}
             onChange={e => handleChange(e)}
             type="text"
-            name="username"
+            name="statefulUsername"
           />
         </div>
         <div className="form-group">
-          <label className="col-form-label col-form-label-lg" htmlFor="email">
+          <label
+            className="col-form-label col-form-label-lg"
+            htmlFor="statefulEmail"
+          >
             Email
           </label>
           <input
             className="form-control form-control-lg"
-            value={form.email}
+            value={form.statefulEmail}
             onChange={e => handleChange(e)}
             type="email"
-            name="email"
+            name="statefulEmail"
           />
         </div>
         <input
