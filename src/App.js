@@ -23,7 +23,13 @@ const App = () => {
         <StatefulForm type="Stateful React Form" />
         <FormikForm type="Formik Form" />
       </div>
-      <img src={octocat} alt="Octocat" height="30px" width="30px" />
+      <img
+        alt="Octocat"
+        className="m-5"
+        height="30px"
+        src={octocat}
+        width="30px"
+      />
     </div>
   );
 };
