@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Formik, Form, Field, ErrorMessage } from "formik";
+import { Formik } from "formik";
 import axios from "axios";
 import qs from "qs";
 import "./App.css";
@@ -55,7 +55,15 @@ const App = () => {
           }
         }}
       >
-        {({ isSubmitting, handleSubmit }) => (
+        {({
+          errors,
+          handleBlur,
+          handleChange,
+          handleSubmit,
+          isSubmitting,
+          touched,
+          values
+        }) => (
           <form
             onSubmit={handleSubmit}
             name="contact"
@@ -69,16 +77,17 @@ const App = () => {
               >
                 Name
               </label>
-              <Field
+              <input
                 className="form-control form-control-lg"
+                name="username"
+                onBlur={handleBlur}
+                onChange={handleChange}
                 type="text"
-                name="username"
+                value={values.username}
               />
-              <ErrorMessage
-                className="text-danger"
-                name="username"
-                component="div"
-              />
+              {errors.username && touched.username ? (
+                <div className="text-danger">{errors.username}</div>
+              ) : null}
             </div>
             <div className="form-group">
               <label
@@ -87,16 +96,17 @@ const App = () => {
               >
                 Email
               </label>
-              <Field
+              <input
                 className="form-control form-control-lg"
+                name="email"
+                onBlur={handleBlur}
+                onChange={handleChange}
                 type="email"
-                name="email"
+                value={values.username}
               />
-              <ErrorMessage
-                className="text-danger"
-                name="email"
-                component="div"
-              />
+              {errors.email && touched.email ? (
+                <div className="text-danger">{errors.email}</div>
+              ) : null}
             </div>
             <button
               className="btn btn-lg btn-outline-primary m-3"
