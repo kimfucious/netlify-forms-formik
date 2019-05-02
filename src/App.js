@@ -23,13 +23,15 @@ const App = () => {
         <StatefulForm type="Stateful React Form" />
         <FormikForm type="Formik Form" />
       </div>
-      <img
-        alt="Octocat"
-        className="m-5"
-        height="30px"
-        src={octocat}
-        width="30px"
-      />
+      <a href="https://github.com/kimfucious/netlify-forms-formik">
+        <img
+          alt="Octocat"
+          className="m-5"
+          height="30px"
+          src={octocat}
+          width="30px"
+        />
+      </a>
     </div>
   );
 };
