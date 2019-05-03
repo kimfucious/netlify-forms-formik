@@ -67,7 +67,7 @@ a) Add a `bot-field` and `form-name` field to `initialValues` of the Formik form
 
 While the honeypot is a novel concept, it's not really effective against spam bots, so you check out the section on adding reCaptcha, which is a much more robust solution.
 
-> :point_up: In February 2019, Netflify [ announced ](https://www.netlify.com/blog/2019/02/12/improved-netlify-forms-spam-filtering-using-akismet/) that all form submissions will be filtered for spam, using Akismet. _Huzzah huzzah!_
+> :point*up: In February 2019, Netflify [ announced ](https://www.netlify.com/blog/2019/02/12/improved-netlify-forms-spam-filtering-using-akismet/) that all form submissions will be filtered for spam, using Akismet. \_Huzzah huzzah!*
 
 b) Add those (hidden) fields to the Formik form itself:
 
@@ -76,7 +76,7 @@ b) Add those (hidden) fields to the Formik form itself:
 <Field type="hidden" name="bot-field" />
 ```
 
-> :point_up: PRO TIP: the relevant code to see how this works can be found in `/public/index.html` and `FormikForm.js` within this repo.
+> :point_up: The relevant code to see how this works can be found in `/public/index.html` and `FormikForm.js` within this repo.
 
 ## Adding ReCaptcha
 
@@ -84,7 +84,7 @@ b) Add those (hidden) fields to the Formik form itself:
 
 Use a library to add Recaptcha (e.g. [reaptcha](https://www.npmjs.com/package/reaptcha)) and don't add anything related to reCaptcha to the `/public/index.html` file.
 
-> :point_up: reCaptcha is notoriously easy to mistype, and Reaptcha adds another nuance to the pot. I've used abbreviations in variables to help avoid issues around that.
+> :point_up: reCaptcha is notoriously easy to mistype, and `Reaptcha` adds another nuance to the pot. I've used abbreviations in variables to help avoid issues around that.
 
 ### Setup
 
