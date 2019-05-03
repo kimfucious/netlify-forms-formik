@@ -3,7 +3,7 @@ import { ErrorMessage, Field, Form, Formik } from "formik";
 import axios from "axios";
 import qs from "qs";
 
-export default props => {
+export default () => {
   const [msgSent, setMsgSent] = useState(false);
   const [errMsg, setErrMsg] = useState(false);
 
