@@ -2,7 +2,7 @@
 
 This repo was created to test and document how to get Netlify Forms working with Formik in a Create React App build and add ReCaptcha if desired.
 
-Netlify Forms is a super cool (and free) feature for sites hosted on the [Netflify](https://netlify.com) platform.
+Netlify Forms is a super cool (and free) feature for sites hosted on the [Netlify](https://netlify.com) platform.
 
 Formik is a great library that "removes the tears" from form creation in React.
 
