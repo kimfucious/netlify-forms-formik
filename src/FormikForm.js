@@ -158,7 +158,7 @@ export default () => {
             </div>
             <Reaptcha
               ref={rcRef}
-              sitekey="6Le_laEUAAAAACRNoby3_NLejhu0lCqb4_WeSotQ"
+              sitekey={process.env.REACT_APP_SITE_RECAPTCHA_KEY}
               onVerify={onVerify}
               on
               onLoad={onLoad}
