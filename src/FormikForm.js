@@ -52,15 +52,15 @@ export default () => {
         }}
         validate={values => {
           let errors = {};
-          if (!values.formikEmail) {
-            errors.formikEmail = "Required";
+          if (!values.email) {
+            errors.email = "Required";
           } else if (
-            !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(values.formikEmail)
+            !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(values.email)
           ) {
-            errors.formikEmail = "Invalid email address";
+            errors.email = "Invalid email address";
           }
-          if (!values.formikUsername) {
-            errors.formikUsername = "Required";
+          if (!values.username) {
+            errors.username = "Required";
           }
           return errors;
         }}
@@ -92,6 +92,7 @@ export default () => {
             data-netlify-recaptcha="true"
             className="d-flex flex-column align-items-center"
             name="contact"
+            noValidate
           >
             <Field type="hidden" name="contact" />
             <Field type="hidden" name="bot-field" />
