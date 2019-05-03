@@ -118,7 +118,7 @@ export default () => {
             name="contact"
             noValidate
           >
-            <Field type="hidden" name="contact" />
+            <Field type="hidden" name="form-name" />
             <Field type="hidden" name="bot-field" />
             <div className="form-group">
               <label
