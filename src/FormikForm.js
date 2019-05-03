@@ -7,7 +7,7 @@ export default () => {
   const [msgSent, setMsgSent] = useState(false);
   const [errMsg, setErrMsg] = useState(false);
 
-  const renderButton = () => {
+  const renderButton = isSubmitting => {
     if (errMsg) {
       return (
         <button
@@ -33,7 +33,7 @@ export default () => {
         <button
           className="btn btn-lg btn-outline-info m-3"
           type="submit"
-          disabled
+          disabled={isSubmitting}
         >
           Submit
         </button>
@@ -138,7 +138,7 @@ export default () => {
                 component="div"
               />
             </div>
-            {renderButton()}
+            {renderButton(isSubmitting)}
             {errMsg ? <div className="text-danger">{errMsg}</div> : null}
           </Form>
         )}
