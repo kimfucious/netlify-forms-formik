@@ -21,7 +21,7 @@ export default () => {
 
   const onLoad = () => {
     setRcLoaded(true);
-    console.log("recaptcha rcLoaded...");
+    console.log("recaptcha loaded...");
   };
 
   const onVerify = token => {
