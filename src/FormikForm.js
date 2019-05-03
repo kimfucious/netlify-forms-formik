@@ -160,7 +160,6 @@ export default () => {
               ref={rcRef}
               sitekey={process.env.REACT_APP_SITE_RECAPTCHA_KEY}
               onVerify={onVerify}
-              on
               onLoad={onLoad}
               size="invisible"
             />
