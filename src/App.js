@@ -5,7 +5,6 @@ import formikLogo from "./images/formik.png";
 import octocat from "./images/octocat.jpg";
 import StatefulForm from "./StatefulForm";
 import FormikForm from "./FormikForm";
-import PlainHTMLForm from "./PlainHTMLForm";
 
 const App = () => {
   return (
