@@ -3,7 +3,6 @@ import "./App.css";
 import netlifyLogo from "./images/netlify-logo-alt.png";
 import formikLogo from "./images/formik.png";
 import octocat from "./images/octocat.jpg";
-import StatefulForm from "./StatefulForm";
 import FormikForm from "./FormikForm";
 
 const App = () => {
@@ -18,8 +17,7 @@ const App = () => {
         Netlify Forms with Formik
       </div>
       <div className="d-flex justify-content-around w-100 mt-3">
-        <StatefulForm type="Stateful React Form" />
-        <FormikForm type="Formik Form" />
+        <FormikForm />
       </div>
       <a href="https://github.com/kimfucious/netlify-forms-formik">
         <img
