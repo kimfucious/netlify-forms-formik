@@ -16,7 +16,7 @@ const App = () => {
       <div className="display-4 m-5" style={{ fontSize: "48px" }}>
         Netlify Forms with Formik
       </div>
-      <div className="d-flex justify-content-around w-100 mt-3">
+      <div className="d-flex justify-content-around w-100">
         <FormikForm />
       </div>
       <a href="https://github.com/kimfucious/netlify-forms-formik">
