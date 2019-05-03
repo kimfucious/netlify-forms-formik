@@ -1,20 +1,24 @@
-# Netlify Forms with Formik Test
+# Netlify Forms with Formik
 
 This repo is to test and document how to get Netlify Forms working with Formik in a Create React App build.
+
+[Netflify](https://netlify.com) Forms is a super cool (and free) feature for sites hosted on their platform.
+
+Formik is a great library that "removes the tears" from form creation in React.
+
+The problem is that forms rendered via React don't work out of the box with Netlify forms.
 
 > :point_up: This readme is a work in progress as I work toward a solution. Don't take anyting literally until this comment is removed.
 
 ## tl;dr
 
-Don't use Formik's `Form`, `Field`, and `ErrorMessage` components. Use HTML elements and use Formik's props in element attributes.
+You need to add a hidden HTML form that mimics the fields in your Formik form to the `/public/index.html` file in the public directory, or Netlify forms won't work.
 
-## Why?
+## Reading material
 
-Because setting up Netlify Forms with React is not always as simple as it may seem.
+[This](https://www.netlify.com/blog/2017/07/20/how-to-integrate-netlifys-form-handling-in-a-react-app/) is a very informative article; however--for me, at least--it took a while to realize that there needs to be a mirror HTML form in `/public/index.html` of the form being rendered by React.
 
-[This](https://www.netlify.com/blog/2017/07/20/how-to-integrate-netlifys-form-handling-in-a-react-app/) is a very informative article; however, after poring over it several times, I still had trouble getting everything to work.
-
-Reading [this](https://community.netlify.com/t/common-issue-how-to-debug-your-form/92) send me on many wild goose-chases.
+Reading [this](https://community.netlify.com/t/common-issue-how-to-debug-your-form/92) can be helpful or send you off on a wild goose-chase or two.
 
 ## Initial Setup (doesn't work out of the box)
 
@@ -23,190 +27,87 @@ Reading [this](https://community.netlify.com/t/common-issue-how-to-debug-your-fo
 - Bootswatch ([ Simplex ](https://bootswatch.com/simplex/)) for CSS
 - [Formik](https://www.npmjs.com/package/formik)
 
-With the initial setup (below), submitting the form when hosted on Netlify will return a 404 error.
+Without extra setup, submitting a form when hosted on Netlify will return a 404 error.
 
-```jsx
-const App = () => {
-  const [errMsg, setErrMsg] = useState(false);
-  return (
-    <div className="d-flex flex-column align-items-center justify-content-center w-100 vh-100">
-      <div className="d-flex align-items-center justify-content-center text-muted">
-        <img src={netlifyLogo} alt="netlify logo" />
-        <span className="display-4 mx-3">+</span>
-        <img src={formikLogo} alt="formik logo" />
-      </div>
-      <div className="display-4 m-5">Netlify Forms with Formik</div>
-      <Formik
-        initialValues={{ email: "", username: "" }}
-        validate={values => {
-          let errors = {};
-          if (!values.email) {
-            errors.email = "Required";
-          } else if (
-            !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(values.email)
-          ) {
-            errors.email = "Invalid email address";
-          }
-          if (!values.username) {
-            errors.username = "Required";
-          }
-          return errors;
-        }}
-        onSubmit={async (values, { resetForm, setSubmitting }) => {
-          setSubmitting(true);
-          console.log(values);
-          const data = {
-            "form-name": "contact",
-            ...values
-          };
-          const options = {
-            method: "POST",
-            headers: { "Content-Type": "application/x-www-form-urlencoded" },
-            data: qs.stringify(data),
-            url: "/"
-          };
-          try {
-            await axios(options);
-            resetForm();
-          } catch (e) {
-            setErrMsg(e.message);
-            console.log(e);
-          }
-        }}
-      >
-        {({ isSubmitting }) => (
-          <Form className="d-flex flex-column align-items-center">
-            <div className="form-group">
-              <label
-                className="col-form-label col-form-label-lg"
-                htmlFor="username"
-              >
-                Name
-              </label>
-              <Field
-                className="form-control form-control-lg"
-                type="text"
-                name="username"
-              />
-              <ErrorMessage
-                className="text-danger"
-                name="username"
-                component="div"
-              />
-            </div>
-            <div className="form-group">
-              <label
-                className="col-form-label col-form-label-lg"
-                htmlFor="email"
-              >
-                Email
-              </label>
-              <Field
-                className="form-control form-control-lg"
-                type="email"
-                name="email"
-              />
-              <ErrorMessage
-                className="text-danger"
-                name="email"
-                component="div"
-              />
-            </div>
-            <button
-              className="btn btn-lg btn-outline-primary m-3"
-              type="submit"
-              disabled={isSubmitting}
-            >
-              Submit
-            </button>
-            {errMsg ? <div className="text-danger">{errMsg}</div> : null}
-            <a
-              className="m-3"
-              rel="noopener noreferrer"
-              href="https://github.com/kimfucious/netlify-forms-formik"
-            >
-              <img src={octocat} alt="octocat" height="30px" width="30px" />
-            </a>
-          </Form>
-        )}
-      </Formik>
-    </div>
-  );
-};
-```
+The reason for this is because Netlify's form-bots can't see JavaScript rendered form code.
+
+So in order to get this working, you need to do a bit of extra work.
 
 ## Steps to Get it Working
 
 ### 1) Add a static HTML version of the form
 
-Add the following just below the `</Formik>` tag:
+Add the following form block just below the initial `<body>` element tag in `/public/index.html`:
 
 ```html
-<form name="contact" data-netlify="true" netlify-honeypot="bot-field" hidden>
-  <input type="text" name="name" />
+<form data-netlify="true" hidden name="contact" netlify-honeypot="bot-field">
+  <input type="text" name="username" />
   <input type="email" name="email" />
+  <input name="bot-field" type="hidden" />
 </form>
 ```
 
-### 2) Add a hidden input field to the Formik Form
+> :point_up: This is obviously just an example, so make sure that there is one-to-one match here whereby each input corresponds with a respective input element/Field component in your Formik form.
 
-Add the following just below the Formik `<Form>` tag:
+### 2) Add additional `initial values` to the Formik form
+
+a) Add a `bot-field` and `form-name` field to `initialValues` of the Formik form:
+
+```jsx
+      <Formik
+        initialValues={{
+          "bot-field": "",
+          "form-name": "contact",
+          email: "",
+          username: ""
+        }}
+```
+
+b) Add those (hidden) fields to the Formik form itself:
 
 ```html
-<input type="hidden" name="form-name" value="contact" />
+<Field type="hidden" name="form-name" />
+<Field type="hidden" name="bot-field" />
 ```
 
-### 3) Change Formik Form to HTML form
+> :point_up: PRO TIP: the relevant code to see how this works can be found in `/public/index.html` and `FormikForm.js` within this repo.
 
-Change Formik `<Form>` tag to `<form>` and add the onSubmit attribute:
+## Adding ReCaptcha
 
-```jsx
-{({ isSubmitting, handleSubmit }) => (
-  <form
-    onSubmit={handleSubmit}
-    name="contact"
-  >
-```
+### tl;dr
 
-### 3) Change Formik Field to HTML input
+Use a library to add Recaptcha (e.g. [reaptcha](https://www.npmjs.com/package/reaptcha)) and don't add anything related to reCaptcha to the `/public/index.html` file.
 
-1. Add the following props to the form function: errors, handleBlur, handleChange, touched, and values.
+> :point_up: reCaptcha is notoriously easy to mistype, and Reaptcha adds another nuance to the pot. I've used abbreviations in variables to help avoid issues around that.
 
-```jsx
-{({
-  errors,
-  handleBlur,
-  handleChange,
-  handleSubmit,
-  isSubmitting,
-  touched,
-  values
-}) => (
-  <form
-    onSubmit={handleSubmit}
-    name="contact"
-  >
-```
+### Setup
 
-2. Change the Formik `<Field>` tag to an HTML `<input>` and add attributes for the props in #1 above.
+There are a lot of libraries out there for adding reCaptcha to a React site. After a bit of trial and error, I settled on [reaptcha](https://www.npmjs.com/package/reaptcha).
 
-```html
-<input
-  name="username"
-  onBlur="{handleBlur}"
-  onChange="{handleChange}"
-  type="text"
-  value="{values.username}"
-/>
-```
+Most reCaptcha libraries are not especially clear, IMHO, with regards to how to get the end-to-end solution working.
 
-3. Display errors using conditional rendering
-   Add this snippet under the appropriate input element:
+There's s few steps involved to get things done with Netlify Forms.
 
-```jsx
-{
-  errors.username && touched.username ? (
-    <div className="text-danger">{errors.username}</div>
-  ) : null;
-}
-```
+#### onLoad
+
+`Reaptcha` has a built in function, `onLoad`, which is set as an attribute on the `Reaptcha` in the `FormikForm.js` file
+
+In this example, I use a React effect hook to watch for changes to a React state hook value (rcLoaded), which gets updated when reCaptcha eventually loads after mount.
+
+Once reCaptcha is loaded, reCaptcha gets executed. The reason for running `execute()` is for the support of reCaptcha v2 invisible, which I have set via the `size` attribute on the `Reaptcha` component.
+
+Once it's executed, it gets verified (or not), and the reCaptcha response (token) is placed into state in a React state hook, rcResponse.
+
+This state value is injected into the `data` object, along with the other form field data in the onSubmit function of the Formik form.
+
+#### onVerify
+
+`Reaptcha` has a built in function, `onVerify`, which is set as an attribute on the `Reaptcha` component in the `FormikForm.js` file
+
+Once reCaptcha has been loaden, onVerify() will run and return the reCaptcha response (in the form of a token).
+
+The `onVerify` function in `FormikForm.js` (not the Reaptcha one) populates the React hook state value `rcResponse`.
+
+rcResponse gets injected into `data` when the form is submitted and it's value is assigned to the key, `g-recaptcha-response`.
+
+#### useRef
