@@ -19,7 +19,6 @@ const App = () => {
         Netlify Forms with Formik
       </div>
       <div className="d-flex justify-content-around w-100 mt-3">
-        <PlainHTMLForm type="HTML Form" />
         <StatefulForm type="Stateful React Form" />
         <FormikForm type="Formik Form" />
       </div>
