@@ -2,7 +2,7 @@
 
 This repo was created to test and document how to get Netlify Forms working with Formik in a Create React App build and add ReCaptcha if desired.
 
-[Netflify](https://netlify.com) Forms is a super cool (and free) feature for sites hosted on their platform.
+Netlify Forms is a super cool (and free) feature for sites hosted on the [Netflify](https://netlify.com) platform.
 
 Formik is a great library that "removes the tears" from form creation in React.
 
@@ -27,9 +27,11 @@ Reading [this](https://community.netlify.com/t/common-issue-how-to-debug-your-fo
 - Bootswatch ([ Simplex ](https://bootswatch.com/simplex/)) for CSS
 - [Formik](https://www.npmjs.com/package/formik)
 
-Without extra setup, submitting a form when hosted on Netlify will return a 404 error.
+Without extra setup, submitting a React form when hosted on Netlify will return a 404 error.
 
-The reason for this is because Netlify's form-bots can't see JavaScript rendered form code.
+The 404 error can be a bit misleading because, when you look at the code, the form is there. It should be found. So what's happening?!
+
+The reason is that Netlify's form-bots can't see JavaScript rendered form code.
 
 So in order to get this working, you need to do a bit of extra work.
 
@@ -47,7 +49,7 @@ Add the following form block just below the initial `<body>` element tag in `/pu
 </form>
 ```
 
-> :point_up: This is obviously just an example, so make sure that there is one-to-one match here whereby each input corresponds with a respective input element/Field component in your Formik form.
+> :point_up: This is obviously just an example, so make sure that there is one-to-one match here, whereby each input corresponds with a respective input element/Field component in your Formik form.
 
 ### 2) Add additional `initial values` to the Formik form
 
@@ -62,6 +64,10 @@ a) Add a `bot-field` and `form-name` field to `initialValues` of the Formik form
           username: ""
         }}
 ```
+
+While the honeypot is a novel concept, it's not really effective against spam bots, so you check out the section on adding reCaptcha, which is a much more robust solution.
+
+> :point_up: In February 2019, Netflify [ announced ](https://www.netlify.com/blog/2019/02/12/improved-netlify-forms-spam-filtering-using-akismet/) that all form submissions will be filtered for spam, using Akismet. _Huzzah huzzah!_
 
 b) Add those (hidden) fields to the Formik form itself:
 
