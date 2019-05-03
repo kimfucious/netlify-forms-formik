@@ -24,24 +24,13 @@
   <body>
     <form
       data-netlify="true"
-      data-netlify-recaptcha="true"
       hidden
-      name="stateful-form"
-      netlify-honeypot="stateful-bot-field"
+      name="contact"
+      netlify-honeypot="bot-field"
     >
-      <input type="text" name="statefulUsername" />
-      <input type="email" name="statefulEmail" />
-      <input name="stateful-bot-field" type="hidden" />
-    </form>
-    <form
-      data-netlify="true"
-      hidden
-      name="formik-form"
-      netlify-honeypot="formik-bot-field"
-    >
-      <input type="text" name="formikUsername" />
-      <input type="email" name="formikEmail" />
-      <input name="formik-bot-field" type="hidden" />
+      <input type="text" name="username" />
+      <input type="email" name="email" />
+      <input name="bot-field" type="hidden" />
       <div data-netlify-recaptcha="true"></div>
     </form>
     <noscript>You need to enable JavaScript to run this app.</noscript>

@@ -45,10 +45,10 @@ export default () => {
     <div className="d-flex flex-column align-items-center">
       <Formik
         initialValues={{
-          "formik-bot-field": "",
-          "form-name": "formik-form",
-          formikEmail: "",
-          formikUsername: ""
+          "bot-field": "",
+          "form-name": "contact",
+          email: "",
+          username: ""
         }}
         validate={values => {
           let errors = {};
@@ -88,46 +88,46 @@ export default () => {
         {({ isSubmitting }) => (
           <Form
             data-netlify="true"
-            data-netlify-honeypot="formik-bot-field"
+            data-netlify-honeypot="bot-field"
             data-netlify-recaptcha="true"
             className="d-flex flex-column align-items-center"
-            name="formik-form"
+            name="contact"
           >
-            <Field type="hidden" name="formik-form-name" />
-            <Field type="hidden" name="formik-bot-field" />
+            <Field type="hidden" name="contact" />
+            <Field type="hidden" name="bot-field" />
             <div className="form-group">
               <label
                 className="col-form-label col-form-label-lg"
-                htmlFor="formikUsername"
+                htmlFor="username"
               >
                 Name
               </label>
               <Field
                 className="form-control form-control-lg"
-                name="formikUsername"
+                name="username"
                 type="text"
               />
               <ErrorMessage
                 className="invalid-feedback"
-                name="formikUsername"
+                name="username"
                 component="div"
               />
             </div>
             <div className="form-group">
               <label
                 className="col-form-label col-form-label-lg"
-                htmlFor="formikEmail"
+                htmlFor="email"
               >
                 Email
               </label>
               <Field
                 className="form-control form-control-lg"
-                name="formikEmail"
+                name="email"
                 type="email"
               />
               <ErrorMessage
                 className="invalid-feedback"
-                name="formikEmail"
+                name="email"
                 component="div"
               />
             </div>
