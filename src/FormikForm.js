@@ -85,15 +85,7 @@ export default () => {
           }
         }}
       >
-        {({
-          errors,
-          handleBlur,
-          handleChange,
-          handleSubmit,
-          isSubmitting,
-          touched,
-          values
-        }) => (
+        {({ isSubmitting }) => (
           <Form
             data-netlify="true"
             data-netlify-honeypot="formik-bot-field"
