@@ -1,11 +1,33 @@
-import React, { useState } from "react";
+import React, { useRef, useEffect, useState } from "react";
 import { ErrorMessage, Field, Form, Formik } from "formik";
+import Reaptcha from "reaptcha";
 import axios from "axios";
 import qs from "qs";
 
 export default () => {
-  const [msgSent, setMsgSent] = useState(false);
   const [errMsg, setErrMsg] = useState(false);
+  const [msgSent, setMsgSent] = useState(false);
+  const [rcLoaded, setRcLoaded] = useState(false);
+  const [rcResponse, setRcResponse] = useState(false);
+
+  const rcRef = useRef(null);
+
+  useEffect(() => {
+    console.log("Effect!");
+    if (rcLoaded) {
+      rcRef.current.execute();
+    }
+  }, [rcLoaded]);
+
+  const onLoad = () => {
+    setRcLoaded(true);
+    console.log("recaptcha rcLoaded...");
+  };
+
+  const onVerify = token => {
+    console.log("recaptcha verified...");
+    setRcResponse(token);
+  };
 
   const renderButton = isSubmitting => {
     if (errMsg) {
@@ -67,8 +89,10 @@ export default () => {
         onSubmit={async (values, { resetForm, setSubmitting }) => {
           setSubmitting(true);
           const data = {
-            ...values
+            ...values,
+            "g-recaptcha-response": rcResponse
           };
+          console.log(data);
           const options = {
             method: "POST",
             headers: { "Content-Type": "application/x-www-form-urlencoded" },
@@ -132,7 +156,14 @@ export default () => {
                 component="div"
               />
             </div>
-            <div data-netlify-recaptcha="true" />
+            <Reaptcha
+              ref={rcRef}
+              sitekey="6Le_laEUAAAAACRNoby3_NLejhu0lCqb4_WeSotQ"
+              onVerify={onVerify}
+              on
+              onLoad={onLoad}
+              size="invisible"
+            />
             {renderButton(isSubmitting)}
             {errMsg ? <div className="text-danger">{errMsg}</div> : null}
           </Form>
