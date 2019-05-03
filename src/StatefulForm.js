@@ -4,10 +4,10 @@ import qs from "qs";
 
 export default props => {
   const initialFormState = {
-    statefulUsername: "",
-    statefulEmail: "",
+    "form-name": "stateful-form",
     "stateful-bot-field": "",
-    "form-name": "stateful-form"
+    statefulEmail: "",
+    statefulUsername: ""
   };
   const [message, setMessage] = useState(false);
   const [form, setForm] = useState(initialFormState);
@@ -16,17 +16,18 @@ export default props => {
   };
   const handleSubmit = async () => {
     console.log(form);
-    const data = {
-      ...form
-    };
-    const options = {
-      method: "POST",
-      headers: { "Content-Type": "application/x-www-form-urlencoded" },
-      data: qs.stringify(data),
-      url: "/"
-    };
     try {
-      await axios(options);
+      await axios.post(
+        "/",
+        qs.stringify({
+          ...form
+        }),
+        {
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded"
+          }
+        }
+      );
       setMessage("Message Sent");
     } catch (e) {
       setMessage(e.message);
