@@ -1,14 +1,48 @@
 import React, { useState } from "react";
-import { Formik } from "formik";
+import { ErrorMessage, Field, Form, Formik } from "formik";
 import axios from "axios";
 import qs from "qs";
 
 export default props => {
-  const [message, setMessage] = useState(false);
+  const [msgSent, setMsgSent] = useState(false);
+  const [errMsg, setErrMsg] = useState(false);
+
+  const renderButton = () => {
+    if (errMsg) {
+      return (
+        <button
+          className="btn btn-lg btn-outline-danger m-3"
+          type="submit"
+          disabled
+        >
+          Error
+        </button>
+      );
+    } else if (msgSent) {
+      return (
+        <button
+          className="btn btn-lg btn-outline-success m-3"
+          type="submit"
+          disabled
+        >
+          Submitted
+        </button>
+      );
+    } else {
+      return (
+        <button
+          className="btn btn-lg btn-outline-info m-3"
+          type="submit"
+          disabled
+        >
+          Submit
+        </button>
+      );
+    }
+  };
 
   return (
     <div className="d-flex flex-column align-items-center">
-      <h3 className="mb-3">{props.type}</h3>
       <Formik
         initialValues={{
           "formik-bot-field": "",
@@ -32,7 +66,6 @@ export default props => {
         }}
         onSubmit={async (values, { resetForm, setSubmitting }) => {
           setSubmitting(true);
-          console.log(values);
           const data = {
             ...values
           };
@@ -44,9 +77,10 @@ export default props => {
           };
           try {
             await axios(options);
+            setMsgSent(true);
             resetForm();
           } catch (e) {
-            setMessage(e.message);
+            setErrMsg(e.message);
             console.log(e);
           }
         }}
@@ -60,23 +94,14 @@ export default props => {
           touched,
           values
         }) => (
-          <form
+          <Form
             data-netlify="true"
             data-netlify-honeypot="formik-bot-field"
             className="d-flex flex-column align-items-center"
             name="formik-form"
-            onSubmit={handleSubmit}
           >
-            <input
-              type="hidden"
-              name="formik-form-name"
-              value={values["formik-form-name"]}
-            />
-            <input
-              type="hidden"
-              name="formik-bot-field"
-              value={values["formik-bot-field"]}
-            />
+            <Field type="hidden" name="formik-form-name" />
+            <Field type="hidden" name="formik-bot-field" />
             <div className="form-group">
               <label
                 className="col-form-label col-form-label-lg"
@@ -84,17 +109,16 @@ export default props => {
               >
                 Name
               </label>
-              <input
+              <Field
                 className="form-control form-control-lg"
                 name="formikUsername"
-                onBlur={handleBlur}
-                onChange={handleChange}
                 type="text"
-                value={values.formikUsername}
               />
-              {errors.formikUsername && touched.formikUsername ? (
-                <div className="invalid-feedback">{errors.formikUsername}</div>
-              ) : null}
+              <ErrorMessage
+                className="invalid-feedback"
+                name="formikUsername"
+                component="div"
+              />
             </div>
             <div className="form-group">
               <label
@@ -103,27 +127,20 @@ export default props => {
               >
                 Email
               </label>
-              <input
+              <Field
                 className="form-control form-control-lg"
                 name="formikEmail"
-                onBlur={handleBlur}
-                onChange={handleChange}
                 type="email"
-                value={values.formikEmail}
               />
-              {errors.formikEmail && touched.formikEmail ? (
-                <div className="invalid-feedback">{errors.formikEmail}</div>
-              ) : null}
+              <ErrorMessage
+                className="invalid-feedback"
+                name="formikEmail"
+                component="div"
+              />
             </div>
-            <button
-              className="btn btn-lg btn-outline-primary m-3"
-              type="submit"
-              disabled={isSubmitting}
-            >
-              Submit
-            </button>
-            {message ? <div className="text-danger">{message}</div> : null}
-          </form>
+            {renderButton()}
+            {errMsg ? <div className="text-danger">{errMsg}</div> : null}
+          </Form>
         )}
       </Formik>
     </div>
