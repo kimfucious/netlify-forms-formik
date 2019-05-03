@@ -89,6 +89,7 @@ export default () => {
           <Form
             data-netlify="true"
             data-netlify-honeypot="formik-bot-field"
+            data-netlify-recaptcha="true"
             className="d-flex flex-column align-items-center"
             name="formik-form"
           >
@@ -130,6 +131,7 @@ export default () => {
                 component="div"
               />
             </div>
+            <div data-netlify-recaptcha="true" />
             {renderButton(isSubmitting)}
             {errMsg ? <div className="text-danger">{errMsg}</div> : null}
           </Form>
