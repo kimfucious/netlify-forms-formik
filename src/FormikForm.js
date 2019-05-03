@@ -12,7 +12,7 @@ export default props => {
       <Formik
         initialValues={{
           "formik-bot-field": "",
-          "formik-form-name": "formik-form",
+          "form-name": "formik-form",
           formikEmail: "",
           formikUsername: ""
         }}
