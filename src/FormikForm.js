@@ -71,10 +71,14 @@ export default () => {
   };
 
   const resetEverything = resetForm => {
-    resetForm();
-    setMsgSent(false);
-    setErrMsg(false);
-    onExpire();
+    if (!verified) {
+      onExpire();
+    }
+    if (resetForm) {
+      setMsgSent(false);
+      setErrMsg(false);
+      resetForm();
+    }
   };
 
   return (
@@ -198,7 +202,7 @@ export default () => {
               {!verified && (
                 <button
                   className="btn btn-link text-dark"
-                  onClick={() => onExpire()}
+                  onClick={() => resetEverything()}
                 >
                   reset
                 </button>
