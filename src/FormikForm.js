@@ -198,7 +198,7 @@ export default () => {
             </div>
             {renderButton(isSubmitting, executing, verified)}
             {errMsg ? <div className="text-primary m-1">{errMsg}</div> : null}
-            {(msgSent || errMsg) && (
+            {(msgSent || errMsg || !verified) && (
               <button
                 className="btn btn-lg btn-link text-dark"
                 onClick={() => resetEverything(resetForm)}
