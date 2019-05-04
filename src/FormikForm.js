@@ -173,6 +173,7 @@ export default () => {
             <Reaptcha
               ref={rcRef}
               sitekey="6Le_laEUAAAAACRNoby3_NLejhu0lCqb4_WeSotQ"
+              data-netlify-recaptcha="true"
               onExpire={onExpire}
               onVerify={onVerify}
               onLoad={onLoad}
