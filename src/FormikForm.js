@@ -7,29 +7,35 @@ import qs from "qs";
 export default () => {
   const [errMsg, setErrMsg] = useState(false);
   const [msgSent, setMsgSent] = useState(false);
-  const [rcLoaded, setRcLoaded] = useState(false);
-  const [rcResponse, setRcResponse] = useState(false);
+  const [loaded, setLoaded] = useState(false);
+  const [token, setToken] = useState(false);
+  const [executing, setExecuting] = useState(false);
+  const [verified, setVerified] = useState(false);
 
   const rcRef = useRef(null);
 
   useEffect(() => {
-    console.log("Effect!");
-    if (rcLoaded) {
+    if (loaded) {
       rcRef.current.execute();
+      setExecuting(true);
     }
-  }, [rcLoaded]);
+  }, [loaded]);
 
+  const onExpire = () => {
+    setVerified(false);
+    rcRef.current.reset();
+  };
   const onLoad = () => {
-    setRcLoaded(true);
-    console.log("recaptcha loaded...");
+    setLoaded(true);
   };
 
   const onVerify = token => {
-    console.log("recaptcha verified...");
-    setRcResponse(token);
+    setToken(token);
+    setVerified(true);
+    setExecuting(false);
   };
 
-  const renderButton = isSubmitting => {
+  const renderButton = (executing, isSubmitting, verified) => {
     if (errMsg) {
       return (
         <button
@@ -55,7 +61,7 @@ export default () => {
         <button
           className="btn btn-lg btn-outline-info m-3"
           type="submit"
-          disabled={isSubmitting}
+          disabled={isSubmitting || executing || !verified}
         >
           Submit
         </button>
@@ -90,7 +96,7 @@ export default () => {
           setSubmitting(true);
           const data = {
             ...values,
-            "g-recaptcha-response": rcResponse
+            "g-recaptcha-response": token
           };
           console.log(data);
           const options = {
@@ -159,11 +165,29 @@ export default () => {
             <Reaptcha
               ref={rcRef}
               sitekey="6Le_laEUAAAAACRNoby3_NLejhu0lCqb4_WeSotQ"
+              onExpire={onExpire}
               onVerify={onVerify}
               onLoad={onLoad}
               size="invisible"
             />
-            {renderButton(isSubmitting)}
+            <div className="m-2 col-form-label col-form-label-lg">
+              ReCaptcha status:
+              <span
+                className={`badge badge-${
+                  loaded ? "success" : "primary"
+                } mx-2 p-2`}
+              >
+                loaded
+              </span>
+              <span
+                className={`badge badge-${
+                  verified ? "success" : "primary"
+                } mx-2 p-2`}
+              >
+                verified
+              </span>
+            </div>
+            {renderButton(isSubmitting, executing, verified)}
             {errMsg ? <div className="text-danger">{errMsg}</div> : null}
           </Form>
         )}

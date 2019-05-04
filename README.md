@@ -14,6 +14,8 @@ The problem is that forms rendered via React don't work out of the box with Netl
 
 You need to add a hidden HTML form that mimics the fields in your Formik form to the `/public/index.html` file in the public directory, or Netlify forms won't work.
 
+> :point_up: Note that static site generators like Gatsby and Hugo are different beasts and require a different solution than would a CRA build. Documentation here is soley pertinent to CRA.
+
 ## Reading material
 
 [This](https://www.netlify.com/blog/2017/07/20/how-to-integrate-netlifys-form-handling-in-a-react-app/) is a very informative article; however--for me, at least--it took a while to realize that there needs to be a mirror HTML form in `/public/index.html` of the form being rendered by React.
