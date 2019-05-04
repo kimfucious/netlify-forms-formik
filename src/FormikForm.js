@@ -24,6 +24,7 @@ export default () => {
   const onExpire = () => {
     setVerified(false);
     rcRef.current.reset();
+    rcRef.current.execute();
   };
   const onLoad = () => {
     setLoaded(true);
@@ -39,7 +40,7 @@ export default () => {
     if (errMsg) {
       return (
         <button
-          className="btn btn-lg btn-outline-danger m-3"
+          className="btn btn-lg btn-outline-primary mt-3"
           type="submit"
           disabled
         >
@@ -49,7 +50,7 @@ export default () => {
     } else if (msgSent) {
       return (
         <button
-          className="btn btn-lg btn-outline-success m-3"
+          className="btn btn-lg btn-outline-success mt-3"
           type="submit"
           disabled
         >
@@ -59,7 +60,7 @@ export default () => {
     } else {
       return (
         <button
-          className="btn btn-lg btn-outline-info m-3"
+          className="btn btn-lg btn-outline-info mt-3"
           type="submit"
           disabled={isSubmitting || executing || !verified}
         >
@@ -67,6 +68,13 @@ export default () => {
         </button>
       );
     }
+  };
+
+  const resetEverything = resetForm => {
+    resetForm();
+    setMsgSent(false);
+    setErrMsg(false);
+    onExpire();
   };
 
   return (
@@ -115,7 +123,7 @@ export default () => {
           }
         }}
       >
-        {({ isSubmitting }) => (
+        {({ isSubmitting, resetForm }) => (
           <Form
             data-netlify="true"
             data-netlify-honeypot="bot-field"
@@ -171,7 +179,7 @@ export default () => {
               size="invisible"
             />
             <div className="m-2 col-form-label col-form-label-lg">
-              ReCaptcha status:
+              <span className="mr-1">ReCaptcha status:</span>
               <span
                 className={`badge badge-${
                   loaded ? "success" : "primary"
@@ -188,7 +196,15 @@ export default () => {
               </span>
             </div>
             {renderButton(isSubmitting, executing, verified)}
-            {errMsg ? <div className="text-danger">{errMsg}</div> : null}
+            {errMsg ? <div className="text-primary m-1">{errMsg}</div> : null}
+            {(msgSent || errMsg) && (
+              <button
+                className="btn btn-lg btn-link text-dark"
+                onClick={() => resetEverything(resetForm)}
+              >
+                reset form
+              </button>
+            )}
           </Form>
         )}
       </Formik>
