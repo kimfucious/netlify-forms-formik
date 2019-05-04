@@ -16,7 +16,6 @@ export default () => {
   const rcRef = useRef(null);
 
   useEffect(() => {
-    console.log(`Effect: loaded has changed to ${loaded}`);
     if (loaded && !verified) {
       console.log(
         `Effect: loaded = ${loaded} and verified = ${verified}: executing...`
@@ -34,8 +33,7 @@ export default () => {
   const onExpire = async () => {
     console.log("expired...");
     console.log("resetting...");
-    await rcRef.current.reset();
-    setVerified(false);
+    resetReCaptcha();
   };
 
   const onLoad = () => {
@@ -85,11 +83,7 @@ export default () => {
   };
 
   const resetEverything = resetForm => {
-    if (!verified) {
-      onExpire();
-    }
     if (rcError) {
-      onExpire();
       setRcError(false);
     }
     if (resetForm) {
@@ -97,6 +91,13 @@ export default () => {
       setErrMsg(false);
       resetForm();
     }
+    resetReCaptcha();
+  };
+
+  const resetReCaptcha = async () => {
+    console.log("resetting...");
+    await rcRef.current.reset();
+    setVerified(false);
   };
 
   return (
