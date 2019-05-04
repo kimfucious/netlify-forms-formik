@@ -11,26 +11,40 @@ export default () => {
   const [token, setToken] = useState(false);
   const [executing, setExecuting] = useState(false);
   const [verified, setVerified] = useState(false);
+  const [rcError, setRcError] = useState(false);
 
   const rcRef = useRef(null);
 
   useEffect(() => {
-    if (loaded) {
+    console.log(`Effect: loaded has changed to ${loaded}`);
+    if (loaded && !verified) {
+      console.log(
+        `Effect: loaded = ${loaded} and verified = ${verified}: executing...`
+      );
       rcRef.current.execute();
       setExecuting(true);
     }
-  }, [loaded]);
+  }, [loaded, verified]);
 
-  const onExpire = () => {
-    setVerified(false);
-    rcRef.current.reset();
-    rcRef.current.execute();
+  const onError = () => {
+    console.log("error...");
+    setRcError(true);
   };
+
+  const onExpire = async () => {
+    console.log("expired...");
+    console.log("resetting...");
+    await rcRef.current.reset();
+    setVerified(false);
+  };
+
   const onLoad = () => {
+    console.log("loaded...");
     setLoaded(true);
   };
 
   const onVerify = token => {
+    console.log("verified...");
     setToken(token);
     setVerified(true);
     setExecuting(false);
@@ -73,6 +87,10 @@ export default () => {
   const resetEverything = resetForm => {
     if (!verified) {
       onExpire();
+    }
+    if (rcError) {
+      onExpire();
+      setRcError(false);
     }
     if (resetForm) {
       setMsgSent(false);
@@ -178,6 +196,7 @@ export default () => {
               ref={rcRef}
               sitekey="6Le_laEUAAAAACRNoby3_NLejhu0lCqb4_WeSotQ"
               data-netlify-recaptcha="true"
+              onError={onError}
               onExpire={onExpire}
               onVerify={onVerify}
               onLoad={onLoad}
@@ -185,6 +204,7 @@ export default () => {
             />
             <div className="m-2 col-form-label col-form-label-lg">
               <span className="mr-1">ReCaptcha status:</span>
+              <br className="d-block d-sm-none mt-1" />
               <span
                 className={`badge badge-${
                   loaded ? "success" : "primary"
@@ -199,7 +219,15 @@ export default () => {
               >
                 verified
               </span>
-              {!verified && (
+              {executing && (
+                <span className={`badge badge-primary mx-2 p-2`}>
+                  executing
+                </span>
+              )}
+              {rcError && (
+                <span className={`badge badge-primary mx-2 p-2`}>error</span>
+              )}
+              {(rcError || !verified) && (
                 <button
                   className="btn btn-link text-dark"
                   onClick={() => resetEverything()}
