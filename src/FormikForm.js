@@ -5,25 +5,54 @@ import axios from "axios";
 import qs from "qs";
 
 export default () => {
-  const [errMsg, setErrMsg] = useState(false);
-  const [msgSent, setMsgSent] = useState(false);
-  const [loaded, setLoaded] = useState(false);
-  const [token, setToken] = useState(false);
+  const [errMsg, setErrMsg] = useState("");
   const [executing, setExecuting] = useState(false);
+  const [formValues, setFormValues] = useState({});
+  const [formReset, setFormReset] = useState({});
+  const [loaded, setLoaded] = useState(false);
+  const [msgSent, setMsgSent] = useState(false);
+  const [rcError, setRcError] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [token, setToken] = useState("");
   const [verified, setVerified] = useState(false);
-  const [rcError, setRcError] = useState(false);
 
   const rcRef = useRef(null);
 
+  // useEffect(() => {
+  //   if (loaded && !verified) {
+  //     console.log(
+  //       `Effect: loaded = ${loaded} and verified = ${verified}: executing...`
+  //     );
+  //     rcRef.current.execute();
+  //     setExecuting(true);
+  //   }
+  // }, [loaded, verified]);
+
   useEffect(() => {
-    if (loaded && !verified) {
-      console.log(
-        `Effect: loaded = ${loaded} and verified = ${verified}: executing...`
-      );
-      rcRef.current.execute();
-      setExecuting(true);
+    const handleSubmit = async (formValues, token) => {
+      const data = {
+        ...formValues,
+        "g-recaptcha-response": token
+      };
+      console.log(data);
+      const options = {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        data: qs.stringify(data),
+        url: "/"
+      };
+      try {
+        await axios(options);
+        setMsgSent(true);
+        formReset();
+      } catch (e) {
+        setErrMsg(e.message);
+      }
+    };
+    if (token) {
+      handleSubmit(formValues, token);
     }
-  }, [loaded, verified]);
+  }, [formReset, formValues, token]);
 
   const onError = () => {
     console.log("error...");
@@ -36,9 +65,10 @@ export default () => {
     resetReCaptcha();
   };
 
-  const onLoad = () => {
+  const onLoad = resetForm => {
     console.log("loaded...");
     setLoaded(true);
+    setFormReset(resetForm);
   };
 
   const onVerify = token => {
@@ -48,7 +78,7 @@ export default () => {
     setExecuting(false);
   };
 
-  const renderButton = (executing, isSubmitting, verified) => {
+  const renderButton = (executing, isSubmitting) => {
     if (errMsg) {
       return (
         <button
@@ -74,7 +104,7 @@ export default () => {
         <button
           className="btn btn-lg btn-outline-info mt-3"
           type="submit"
-          disabled={isSubmitting || executing || !verified}
+          disabled={isSubmitting || executing}
         >
           Submit
         </button>
@@ -123,30 +153,14 @@ export default () => {
           }
           return errors;
         }}
-        onSubmit={async (values, { resetForm, setSubmitting }) => {
-          setSubmitting(true);
-          const data = {
-            ...values,
-            "g-recaptcha-response": token
-          };
-          console.log(data);
-          const options = {
-            method: "POST",
-            headers: { "Content-Type": "application/x-www-form-urlencoded" },
-            data: qs.stringify(data),
-            url: "/"
-          };
-          try {
-            await axios(options);
-            setMsgSent(true);
-            resetForm();
-          } catch (e) {
-            setErrMsg(e.message);
-            console.log(e);
-          }
+        onSubmit={async values => {
+          setIsSubmitting(true);
+          setFormValues({ ...values });
+          setExecuting(true);
+          rcRef.current.execute();
         }}
       >
-        {({ isSubmitting, resetForm }) => (
+        {({ resetForm }) => (
           <Form
             data-netlify="true"
             data-netlify-honeypot="bot-field"
@@ -200,7 +214,7 @@ export default () => {
               onError={onError}
               onExpire={onExpire}
               onVerify={onVerify}
-              onLoad={onLoad}
+              onLoad={() => onLoad(() => resetForm)}
               size="invisible"
             />
             <div className="m-2 col-form-label col-form-label-lg">
