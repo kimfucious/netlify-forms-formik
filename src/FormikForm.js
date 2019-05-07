@@ -242,10 +242,10 @@ export default () => {
               {rcError && (
                 <span className={`badge badge-primary mx-2 p-2`}>error</span>
               )}
-              {(rcError || !verified) && (
+              {rcError && (
                 <button
                   className="btn btn-link text-dark"
-                  onClick={() => resetEverything()}
+                  onClick={() => resetEverything(resetForm)}
                 >
                   reset
                 </button>
