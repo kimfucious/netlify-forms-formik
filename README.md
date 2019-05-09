@@ -16,19 +16,18 @@ The problem is that forms rendered via React don't work out of the box with Netl
 
 You need to add a hidden HTML form that mimics the fields in your Formik form to the `/public/index.html` file in the public directory, or Netlify forms won't work.
 
-> :point_up: Note that static site generators like Gatsby and Hugo are different beasts and require a different solution than would a CRA build. Documentation here is soley pertinent to CRA.
+> :point_up: Note that static site generators like Gatsby and Hugo are different beasts and require a different solution than would a Create React App build. Documentation here is soley pertinent to CRA.
 
 ## Reading material
 
-[This](https://www.netlify.com/blog/2017/07/20/how-to-integrate-netlifys-form-handling-in-a-react-app/) is a very informative article; however--for me, at least--it took a while to realize that there needs to be a mirror HTML form in `/public/index.html` of the form being rendered by React.
+[This](https://www.netlify.com/blog/2017/07/20/how-to-integrate-netlifys-form-handling-in-a-react-app/) is a very informative article; however--for me, at least--it took a while to realize that there needs to be a mirror HTML form in `/public/index.html` of the form being rendered by React. And the info surrouning reCaptcha is a bit lean.
 
-Reading [this](https://community.netlify.com/t/common-issue-how-to-debug-your-form/92) can be helpful or send you off on a wild goose-chase or two.
+Reading [this](https://community.netlify.com/t/common-issue-how-to-debug-your-form/92) can be helpful or send you off on a wild goose-chase or three.
 
 ## Initial Setup (doesn't work out of the box)
 
 - [Create React App](https://github.com/facebook/create-react-app)
 - [Axios](https://www.npmjs.com/package/axios) ( with [ qs ](https://www.npmjs.com/package/qs) ) for the post
-- Bootswatch ([ Simplex ](https://bootswatch.com/simplex/)) for CSS
 - [Formik](https://www.npmjs.com/package/formik)
 
 Without extra setup, submitting a React form when hosted on Netlify will return a 404 error.
@@ -37,9 +36,9 @@ The 404 error can be a bit misleading because, when you look at the code, the fo
 
 The reason is that Netlify's form-bots can't see JavaScript rendered form code.
 
-So in order to get this working, you need to do a bit of extra work.
+So in order to get this working, a bit of extra work needs to be done.
 
-## Steps to Get it Working
+## Steps to Get Things Working
 
 ### 1) Add a static HTML version of the form
 
@@ -52,6 +51,8 @@ Add the following form block just below the initial `<body>` element tag in `/pu
   <input name="bot-field" type="hidden" />
 </form>
 ```
+
+I believe you can also just put this form as a separate HTML file somewhere in your build, and it will get picked up, but I haven't tried that yet.
 
 > :point_up: This is obviously just an example, so make sure that there is one-to-one match here, whereby each input corresponds with a respective input element/Field component in your Formik form.
 
@@ -88,7 +89,7 @@ b) Add those (hidden) fields to the Formik form itself:
 
 Use a library to add Recaptcha (e.g. [reaptcha](https://www.npmjs.com/package/reaptcha)) and don't add anything related to reCaptcha to the `/public/index.html` file. And be sure to send the recaptcha response along with your form submission.
 
-> :point_up: reCaptcha is notoriously easy to mistype, and `Reaptcha` adds another nuance to the pot. I've used abbreviations in variables to help avoid issues around that.
+> :point_up: reCaptcha is notoriously easy to mistype, and `reaptcha` adds another nuance to the pot. I've used abbreviations in variables to help avoid issues around that.
 
 ### Setup
 
@@ -105,9 +106,9 @@ The steps are:
 3. Retrieve the reCaptcha response
 4. Submit the form data along with the reCaptcha response.
 
-To do that, I've leveraged the built-in callback functions of `Reaptcha` along with some React Hooks.
+To do that, I've leveraged the built-in callback functions of `reaptcha` along with some React Hooks.
 
-The Reaptcha block looks like this:
+The `reaptcha` block looks like this:
 
 ```jsx
 <Reaptcha
@@ -124,7 +125,7 @@ The Reaptcha block looks like this:
 
 #### onLoad
 
-`onLoad`, is set as an attribute on the `Reaptcha` in the `FormikForm.js` file
+`onLoad`, is set as an attribute on the `Reaptcha` element in the `FormikForm.js` file
 
 In this example, I use the `onLoad` callback function to load the `clearForm` action into a React State Hook:
 
@@ -144,15 +145,15 @@ In this example, I'm by-passing the typical onSubmit function used by Formik for
 
 #### useRef
 
-Once reCaptcha is loaded, reCaptcha needs gets executed. The reason for running `execute()` is for the support of reCaptcha v2 invisible, which I have set via the `size` attribute on the `Reaptcha` component.
+Once reCaptcha is loaded, reCaptcha needs gets executed. The reason for running `execute()` is for the support of reCaptcha v2 invisible, which I have set via the `size` attribute on the `Reaptcha` element.
 
-In order to execute reCaptcha, I've setup a [React Ref Hook](https://reactjs.org/docs/hooks-reference.html#useref) on the Reaptcha element.
+In order to execute reCaptcha, I've setup a [React Ref Hook](https://reactjs.org/docs/hooks-reference.html#useref) on the `Reaptcha` element.
 
 ```jsx
 const rcRef = useRef(null);
 ```
 
-This, plus the ref attribute on the Reaptcha element, allows us to call execute on `rcRef.current`, which is done when the form is submitted in the Formik onSubmit function.
+This, plus the ref attribute on the `Reaptcha` element, allows us to call execute on `rcRef.current`, which is done when the form is submitted in the Formik onSubmit function.
 
 ```jsx
 onSubmit={async values => {
@@ -169,7 +170,7 @@ The reason for separating this out, is that there is a delay between executing r
 
 #### onVerify
 
-`onVerify`, is set as an attribute on the `Reaptcha` component in the `FormikForm.js` file.
+`onVerify`, is set as an attribute on the `Reaptcha` element in the `FormikForm.js` file.
 
 The onVerify callback runs after `rcRef.current.execute()` and returns the reCaptcha response (in the form of a token).
 
