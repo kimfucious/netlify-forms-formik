@@ -18,16 +18,6 @@ export default () => {
 
   const rcRef = useRef(null);
 
-  // useEffect(() => {
-  //   if (loaded && !verified) {
-  //     console.log(
-  //       `Effect: loaded = ${loaded} and verified = ${verified}: executing...`
-  //     );
-  //     rcRef.current.execute();
-  //     setExecuting(true);
-  //   }
-  // }, [loaded, verified]);
-
   useEffect(() => {
     const handleSubmit = async (formValues, token) => {
       const data = {
