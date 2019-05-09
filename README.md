@@ -86,7 +86,7 @@ b) Add those (hidden) fields to the Formik form itself:
 
 ### tl;dr
 
-Use a library to add Recaptcha (e.g. [reaptcha](https://www.npmjs.com/package/reaptcha)) and don't add anything related to reCaptcha to the `/public/index.html` file.
+Use a library to add Recaptcha (e.g. [reaptcha](https://www.npmjs.com/package/reaptcha)) and don't add anything related to reCaptcha to the `/public/index.html` file. And be sure to send the recaptcha response along with your form submission.
 
 > :point_up: reCaptcha is notoriously easy to mistype, and `Reaptcha` adds another nuance to the pot. I've used abbreviations in variables to help avoid issues around that.
 
@@ -96,28 +96,123 @@ There are a lot of libraries out there for adding reCaptcha to a React site. Aft
 
 Most reCaptcha libraries are not especially clear, IMHO, with regards to how to get the end-to-end solution working.
 
-There's s few steps involved to get things done with Netlify Forms.
+There's one key step to get things done with Netlify Forms, the main work here is to get a hold of the Recaptcha response.
+
+The steps are:
+
+1. Load reCaptcha
+2. Execute reCaptcha onSubmit
+3. Retrieve the reCaptcha response
+4. Submit the form data along with the reCaptcha response.
+
+To do that, I've leveraged the built-in callback functions of `Reaptcha` along with some React Hooks.
+
+The Reaptcha block looks like this:
+
+```jsx
+<Reaptcha
+  ref={rcRef}
+  sitekey="your site key goes here"
+  data-netlify-recaptcha="true"
+  onError={onError}
+  onExpire={onExpire}
+  onVerify={onVerify}
+  onLoad={() => onLoad(() => resetForm)}
+  size="invisible"
+/>
+```
 
 #### onLoad
 
-`Reaptcha` has a built in function, `onLoad`, which is set as an attribute on the `Reaptcha` in the `FormikForm.js` file
+`onLoad`, is set as an attribute on the `Reaptcha` in the `FormikForm.js` file
 
-In this example, I use a React effect hook to watch for changes to a React state hook value (rcLoaded), which gets updated when reCaptcha eventually loads after mount.
+In this example, I use the `onLoad` callback function to load the `clearForm` action into a React State Hook:
 
-Once reCaptcha is loaded, reCaptcha gets executed. The reason for running `execute()` is for the support of reCaptcha v2 invisible, which I have set via the `size` attribute on the `Reaptcha` component.
+```jsx
+const onLoad = resetForm => {
+  console.log("loaded...");
+  setLoaded(true);
+  setFormReset(resetForm);
+};
+```
 
-Once it's executed, it gets verified (or not), and the reCaptcha response (token) is placed into state in a React state hook, rcResponse.
+This is kinda hacky, but in order to clear the form after a successful form submission (or for some other reason), I wanted access to that action, which is passed down as a prop, but not accessible outside of the Formik code structure.
 
-This state value is injected into the `data` object, along with the other form field data in the onSubmit function of the Formik form.
+At this point, nothing happens until the user fills out the form and clicks submit.
+
+In this example, I'm by-passing the typical onSubmit function used by Formik for a couple reasons.
+
+#### useRef
+
+Once reCaptcha is loaded, reCaptcha needs gets executed. The reason for running `execute()` is for the support of reCaptcha v2 invisible, which I have set via the `size` attribute on the `Reaptcha` component.
+
+In order to execute reCaptcha, I've setup a [React Ref Hook](https://reactjs.org/docs/hooks-reference.html#useref) on the Reaptcha element.
+
+```jsx
+const rcRef = useRef(null);
+```
+
+This, plus the ref attribute on the Reaptcha element, allows us to call execute on `rcRef.current`, which is done when the form is submitted in the Formik onSubmit function.
+
+```jsx
+onSubmit={async values => {
+  setIsSubmitting(true);
+  setFormValues({ ...values });
+  setExecuting(true);
+  rcRef.current.execute();
+}}
+```
+
+If you're familiar with Formik, this is where all the action usually happens; however, I've moved some of the action out of this function, into a separate function, `handleSubmit`, which gets triggered by a [React Effect Hook](https://reactjs.org/docs/hooks-reference.html#useeffect).
+
+The reason for separating this out, is that there is a delay between executing reCaptcha, receiving the reCaptcha response, and putting it somewhere (state) where it can be accessed.
 
 #### onVerify
 
-`Reaptcha` has a built in function, `onVerify`, which is set as an attribute on the `Reaptcha` component in the `FormikForm.js` file
+`onVerify`, is set as an attribute on the `Reaptcha` component in the `FormikForm.js` file.
 
-Once reCaptcha has been loaden, onVerify() will run and return the reCaptcha response (in the form of a token).
+The onVerify callback runs after `rcRef.current.execute()` and returns the reCaptcha response (in the form of a token).
 
-The `onVerify` function in `FormikForm.js` (not the Reaptcha one) populates the React hook state value `rcResponse`.
+The token is stored in the `React Hook State` value `token`.
 
-rcResponse gets injected into `data` when the form is submitted and it's value is assigned to the key, `g-recaptcha-response`.
+#### handleSubmit
 
-#### useRef
+In this example, I've set up a React Effect Hook, that looks for `token` changes in state.
+
+```jsx
+useEffect(() => {
+  const handleSubmit = async (formValues, token) => {
+    const data = {
+      ...formValues,
+      "g-recaptcha-response": token
+    };
+    console.log(data);
+    const options = {
+      method: "POST",
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      data: qs.stringify(data),
+      url: "/"
+    };
+    try {
+      await axios(options);
+      setMsgSent(true);
+      formReset();
+    } catch (e) {
+      setErrMsg(e.message);
+    }
+  };
+  if (token) {
+    handleSubmit(formValues, token);
+  }
+}, [formReset, formValues, token]);
+```
+
+If there were magic, this is where it happens.
+
+After onVerify callback returns the token and places it in state, the effect hoook will trigger the handleSubmit function.
+
+handleSubmit builds the `axios` configuration (note the content type!) and submits the form.
+
+The reCaptcha response, `token`, gets injected into `data` when the form is submitted and it's value is assigned to the key, `g-recaptcha-response`.
+
+If axios is successful, the form gets reset with `formReset()`, which is actually Formik's `resetForm` that was populated into state at onLoad.
