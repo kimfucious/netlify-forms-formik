@@ -125,7 +125,7 @@ The `Reaptcha` block looks like this:
 
 #### onLoad
 
-`onLoad`, is set as an attribute on the `Reaptcha` element in the `FormikForm.js` file
+`onLoad` is set as an attribute on the `Reaptcha` element in the `FormikForm.js` file.
 
 In this example, the `onLoad` callback function is used to load the `clearForm` action into a [React State Hook](https://reactjs.org/docs/hooks-reference.html#usestate):
 
@@ -145,7 +145,7 @@ At this point, nothing happens until the user fills out the form and clicks subm
 
 #### useRef
 
-Once reCaptcha is loaded, reCaptcha needs gets executed. The reason for running `execute()` is for the support of reCaptcha v2 invisible, which I have set via the `size` attribute on the `Reaptcha` element.
+Once reCaptcha is loaded, reCaptcha needs gets executed. The reason for running `execute()` is for the support of reCaptcha v2 invisible, which is set via the `size` attribute on the `Reaptcha` element.
 
 In order to execute reCaptcha, a [React Ref Hook](https://reactjs.org/docs/hooks-reference.html#useref) has been setup for the `Reaptcha` element.
 
@@ -166,7 +166,7 @@ onSubmit={async values => {
 
 If you're familiar with Formik, this is where all the action usually happens; however, I've moved some of the action out of this function, into a separate function, `handleSubmit`, which gets triggered by a [React Effect Hook](https://reactjs.org/docs/hooks-reference.html#useeffect).
 
-The reason for separating this out, is that there is a delay between executing reCaptcha, receiving the reCaptcha response, and putting it somewhere (state) where it can be accessed. And I got tired of shooting blanks when submitting my form.
+The reason for separating this out, is that there is a delay between executing reCaptcha, receiving the reCaptcha response, and putting it somewhere (e.g. state) where it can be accessed to inject into the form data. And I got tired of shooting blanks when submitting my form.
 
 #### onVerify
 
@@ -208,7 +208,7 @@ useEffect(() => {
 }, [formReset, formValues, token]);
 ```
 
-If there were magic, this is where it might happen.
+> 🧙 If there were magic, this is where it might happen.
 
 After the onVerify callback returns the token and places it in state, the effect hook will trigger the `handleSubmit` function.
 
