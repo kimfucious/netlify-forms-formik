@@ -24,7 +24,6 @@ export default () => {
         ...formValues,
         "g-recaptcha-response": token
       };
-      console.log(data);
       const options = {
         method: "POST",
         headers: { "Content-Type": "application/x-www-form-urlencoded" },
