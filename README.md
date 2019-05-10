@@ -215,4 +215,4 @@ The reCaptcha response, `token`, gets injected into `data` when the form is subm
 
 If axios is successful, the form gets reset with `formReset()`, which is actually Formik's `resetForm` that was populated into state at onLoad.
 
-:rainbow: And Bob's your uncle! :unicorn"
+:rainbow: And Bob's your uncle! :unicorn:
