@@ -8,7 +8,7 @@ Netlify Forms is a super cool (and free) feature for sites hosted on the [Netlif
 
 [Formik](https://www.npmjs.com/package/formik) is a great library that "removes the tears" :sob: from form creation in React.
 
-The problem is that forms rendered via React don't work out of the box with Netlify forms. It's not that they're doing anything wrong, it's just kinda how things are. Thankfully, they're nice enough to have given us a way to work around this issue.
+The problem is that forms rendered via React don't work out of the box with Netlify forms.
 
 ## tl;dr
 
@@ -32,7 +32,7 @@ Without extra setup, submitting a React form when hosted on Netlify will return 
 
 The 404 error can be a bit misleading because, when you look at the code, the form is there. It should be found. So what's happening?!
 
-The reason is that Netlify's form-bots can't see JavaScript rendered form code.
+The reason is that Netlify's form-bots can't see JavaScript rendered form code. It's not that they're doing anything wrong, it's just kinda how things are. Thankfully, they're nice enough to have given us a way to work around this issue.
 
 So in order to get this working, a bit of extra work needs to be done.
 
@@ -164,7 +164,7 @@ onSubmit={async values => {
 
 If you're familiar with Formik, this is where all the action usually happens; however, I've moved some of the action out of this function, into a separate function, `handleSubmit`, which gets triggered by a [React Effect Hook](https://reactjs.org/docs/hooks-reference.html#useeffect).
 
-The reason for separating this out, is that there is a delay between executing reCaptcha, receiving the reCaptcha response, and putting it somewhere (e.g. state) where it can be accessed to inject into the form data. And I got tired of shooting blanks when submitting my form.
+The reason for separating this out is that there is a delay between executing reCaptcha, receiving the reCaptcha response, and putting it somewhere (e.g. state) where it can be accessed to inject into the form data. And I got tired of shooting blanks when submitting my form.
 
 #### onVerify
 
