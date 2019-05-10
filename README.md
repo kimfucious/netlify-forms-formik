@@ -6,17 +6,15 @@ This repo was created to test and document how to get Netlify Forms working with
 
 Netlify Forms is a super cool (and free) feature for sites hosted on the [Netlify](https://netlify.com) platform.
 
-Formik is a great library that "removes the tears" from form creation in React.
+[Formik](https://www.npmjs.com/package/formik) is a great library that "removes the tears" :sob: from form creation in React.
 
-The problem is that forms rendered via React don't work out of the box with Netlify forms.
-
-> :point_up: This readme is a work in progress as I work toward a solution. Don't take anyting literally until this comment is removed.
+The problem is that forms rendered via React don't work out of the box with Netlify forms. It's not that they're doing anything wrong, it's just kinda how things are. Thankfully, they're nice enough to have given us a way to work around this issue.
 
 ## tl;dr
 
 You need to add a hidden HTML form that mimics the fields in your Formik form to the `/public/index.html` file in the public directory, or Netlify forms won't work.
 
-> :point_up: Note that static site generators like Gatsby and Hugo are different beasts and require a different solution than would a Create React App build. Documentation here is soley pertinent to CRA.
+> :point_up: Note that static site generators like Gatsby and Hugo are different beasts and require a different solution (they pretty much just work) than would a Create React App build. Documentation here is soley pertinent to CRA.
 
 ## Reading material
 
@@ -70,9 +68,9 @@ a) Add a `bot-field` and `form-name` field to `initialValues` of the Formik form
         }}
 ```
 
-While the honeypot is a novel concept, it's not really effective against spam bots, so you check out the section on adding reCaptcha, which is a much more robust solution.
+While the honeypot is a novel concept, it's not really effective against spam bots, so check out the section on adding reCaptcha, which is a much more robust solution.
 
-> :point_up: In February 2019, Netflify [announced](https://www.netlify.com/blog/2019/02/12/improved-netlify-forms-spam-filtering-using-akismet/) that all form submissions will be filtered for spam, using Akismet. Huzzah huzzah!
+> :newspaper: In February 2019, Netflify [announced](https://www.netlify.com/blog/2019/02/12/improved-netlify-forms-spam-filtering-using-akismet/) that all form submissions will be filtered for spam, using Akismet. Huzzah huzzah!
 
 b) Add those (hidden) fields to the Formik form itself:
 
@@ -81,21 +79,21 @@ b) Add those (hidden) fields to the Formik form itself:
 <Field type="hidden" name="bot-field" />
 ```
 
-> :point_up: The relevant code to see how this works can be found in `/public/index.html` and `FormikForm.js` within this repo.
+> :floppy_disk: The relevant code to see how this works can be found in `/public/index.html` and `FormikForm.js` within this repo.
 
 ## Adding ReCaptcha
 
 ### tl;dr
 
-Use a library to add Recaptcha (e.g. [reaptcha](https://www.npmjs.com/package/reaptcha)) and don't add anything related to reCaptcha to the `/public/index.html` file. And be sure to send the reCaptcha response along with your form submission.
+Use a library to add Recaptcha (e.g. [reaptcha](https://www.npmjs.com/package/reaptcha)), and be sure to send the reCaptcha response along with your form submission.
 
-> :point_up: reCaptcha is notoriously easy to mistype, and `reaptcha` adds another nuance to the pot. I've used abbreviations in variables to help avoid issues around that.
+> :scream: reCaptcha is notoriously easy to mistype, and `reaptcha` adds another nuance to the pot. I've used abbreviations in variable declarations to help avoid issues around that.
 
 ### Setup
 
 There are a lot of libraries out there for adding reCaptcha to a React site. And most reCaptcha libraries are not especially clear in their documentation, IMHO, with to how to get the end-to-end solution working, esp. getting at the reCaptcha response token.
 
-After a bit of trial and error, I settled on [reaptcha](https://www.npmjs.com/package/reaptcha).
+After a bit of trial and error, I settled on [reaptcha](https://www.npmjs.com/package/reaptcha). It's clean and documented well.
 
 There's actually only one key step to get reCaptcha working with Netlify Forms, which is to send the reCaptcha response token with your form data. The main work here is to get a hold of the Recaptcha response.
 
@@ -104,7 +102,7 @@ The steps are:
 1. Load reCaptcha
 2. Execute reCaptcha onSubmit (for reCaptcha v2 invisible)
 3. Retrieve the reCaptcha response
-4. Submit the form data along with the reCaptcha response.
+4. Submit the reCaptcha response along with the form data.
 
 To do that, this example leverages the built-in callback functions of `reaptcha` along with some React Hooks.
 
@@ -217,4 +215,4 @@ The reCaptcha response, `token`, gets injected into `data` when the form is subm
 
 If axios is successful, the form gets reset with `formReset()`, which is actually Formik's `resetForm` that was populated into state at onLoad.
 
-And Bob's your uncle!
+:rainbow: And Bob's your uncle! :unicorn"
