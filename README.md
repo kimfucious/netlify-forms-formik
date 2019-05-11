@@ -30,11 +30,11 @@ Reading [this](https://community.netlify.com/t/common-issue-how-to-debug-your-fo
 
 Without extra setup, submitting a React form when hosted on Netlify will return a 404 error.
 
-The error can be a bit misleading because, when you look at the code, the form is there. It should be found. So what's happening?!
+This error can be a bit misleading because, when you look at the code, the form is there. It should be found. So what's happening?!
 
 The reason is that Netlify's form-bots can't see JavaScript rendered form code. It's not that they're doing anything wrong, it's just kinda how things are. Thankfully, they're nice enough to have given us a way to work around this issue.
 
-So in order to get this working, a bit of extra work needs to be done.
+So in order to get this working, there's a few more steps to be done.
 
 ## Steps to Get Things Working
 
@@ -50,9 +50,9 @@ Add the following form block just below the initial `<body>` element tag in `/pu
 </form>
 ```
 
-I believe you can also just put this form as a separate HTML file somewhere in your build, and it will get picked up, but I haven't tried that yet.
+According to the maesters, you can--rather than add this code block to `/public/index.html`--create a separate HTML file that includes your form code block somewhere in the build, and it will get picked up. I, haven't tried this, personally, but the maesters said it is so.
 
-> :point_up: This is obviously just an example, so make sure that there is one-to-one match here, whereby each input corresponds with a respective input element/Field component in your Formik form.
+> :point_up: This is obviously just an example. Your form will most likely have differing fields. So make sure that there is one-to-one match here, whereby each input corresponds with a respective input element/Field component in your Formik form.
 
 ### 2) Add additional `initial values` to the Formik form
 
