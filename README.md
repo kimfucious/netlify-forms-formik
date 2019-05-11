@@ -30,7 +30,7 @@ Reading [this](https://community.netlify.com/t/common-issue-how-to-debug-your-fo
 
 Without extra setup, submitting a React form when hosted on Netlify will return a 404 error.
 
-The 404 error can be a bit misleading because, when you look at the code, the form is there. It should be found. So what's happening?!
+The error can be a bit misleading because, when you look at the code, the form is there. It should be found. So what's happening?!
 
 The reason is that Netlify's form-bots can't see JavaScript rendered form code. It's not that they're doing anything wrong, it's just kinda how things are. Thankfully, they're nice enough to have given us a way to work around this issue.
 
@@ -68,9 +68,9 @@ a) Add a `bot-field` and `form-name` field to `initialValues` of the Formik form
         }}
 ```
 
-While the honeypot is a novel concept, it's not really effective against spam bots, so check out the section on adding reCaptcha, which is a much more robust solution.
+While the honeypot is a novel concept, it's not super-effective against spam bots, so check out the section on adding reCaptcha, which is a more robust solution.
 
-> :newspaper: In February 2019, Netflify [announced](https://www.netlify.com/blog/2019/02/12/improved-netlify-forms-spam-filtering-using-akismet/) that all form submissions will be filtered for spam, using Akismet. Huzzah huzzah!
+> :newspaper: In February 2019, Netflify [announced](https://www.netlify.com/blog/2019/02/12/improved-netlify-forms-spam-filtering-using-akismet/) that all form submissions will be filtered for spam, using Akismet. :tada: Huzzah huzzah! :tada:
 
 b) Add those (hidden) fields to the Formik form itself:
 
@@ -85,7 +85,7 @@ b) Add those (hidden) fields to the Formik form itself:
 
 ### tl;dr
 
-Use a library to add Recaptcha (e.g. [reaptcha](https://www.npmjs.com/package/reaptcha)), and be sure to send the reCaptcha response along with your form submission.
+Use a library to add Recaptcha (e.g. [reaptcha](https://www.npmjs.com/package/reaptcha)) and be sure to send the reCaptcha response along with your form submission.
 
 > :scream: reCaptcha is notoriously easy to mistype, and `reaptcha` adds another nuance to the pot. I've used abbreviations in variable declarations to help avoid issues around that.
 
@@ -135,15 +135,17 @@ const onLoad = resetForm => {
 };
 ```
 
-This is kinda hacky, but in order to clear the form after a successful form submission (or for some other reason), I wanted access to that action, which is passed down as a prop, but not accessible outside of the Formik code structure.
+This is kinda hacky, but in order to clear the form after a successful form submission (or for some other reason), I wanted access to that action, which is passed down as a prop but not accessible outside of the Formik block scope.
 
 There may be a better way to do this, but I got bored thinking about it and moved on.
 
-At this point, nothing happens until the user fills out the form and clicks submit.
+At this point, nothing happens until the user fills out and submits the form.
 
 #### useRef
 
 Once reCaptcha is loaded, reCaptcha needs gets executed. The reason for running `execute()` is for the support of reCaptcha v2 invisible, which is set via the `size` attribute on the `Reaptcha` element.
+
+> :point_up: Only reCaptcha v2 invisible is documented here, but with a few tweaks you should be able to get other reCaptcha types (e.g. "I am not a robot") working.
 
 In order to execute reCaptcha, a [React Ref Hook](https://reactjs.org/docs/hooks-reference.html#useref) has been setup for the `Reaptcha` element.
 
@@ -154,7 +156,7 @@ const rcRef = useRef(null);
 This, plus the ref attribute on the `Reaptcha` element, allows execute() to be called on `rcRef.current`, which is done when the form is submitted in the Formik `onSubmit` function.
 
 ```jsx
-onSubmit={async values => {
+onSubmit={values => {
   setIsSubmitting(true);
   setFormValues({ ...values });
   setExecuting(true);
@@ -162,7 +164,7 @@ onSubmit={async values => {
 }}
 ```
 
-If you're familiar with Formik, this is where all the action usually happens; however, I've moved some of the action out of this function, into a separate function, `handleSubmit`, which gets triggered by a [React Effect Hook](https://reactjs.org/docs/hooks-reference.html#useeffect).
+If you're familiar with Formik, this is where all the action usually happens; however, I've moved some of the action out of this function and into a separate function, `handleSubmit`, which gets triggered by a [React Effect Hook](https://reactjs.org/docs/hooks-reference.html#useeffect).
 
 The reason for separating this out is that there is a delay between executing reCaptcha, receiving the reCaptcha response, and putting it somewhere (e.g. state) where it can be accessed to inject into the form data. And I got tired of shooting blanks when submitting my form.
 
@@ -211,7 +213,7 @@ After the onVerify callback returns the token and places it in state, the effect
 
 `handleSubmit` builds the `axios` configuration (note the content type!) and submits the form.
 
-The reCaptcha response, `token`, gets injected into `data` when the form is submitted, and its value is assigned to the key, `g-recaptcha-response`.
+The reCaptcha response, `token`, gets injected into `data` just prior to form submission, and its value is assigned to the key, `g-recaptcha-response`.
 
 If axios is successful, the form gets reset with `formReset()`, which is actually Formik's `resetForm` that was populated into state at onLoad.
 
