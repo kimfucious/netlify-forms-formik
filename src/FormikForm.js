@@ -48,7 +48,7 @@ export default () => {
     setRcError(true);
   };
 
-  const onExpire = async () => {
+  const onExpire = () => {
     console.log("expired...");
     console.log("resetting...");
     resetReCaptcha();
@@ -142,7 +142,7 @@ export default () => {
           }
           return errors;
         }}
-        onSubmit={async values => {
+        onSubmit={values => {
           setIsSubmitting(true);
           setFormValues({ ...values });
           setExecuting(true);
