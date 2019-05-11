@@ -70,7 +70,7 @@ a) Add a `bot-field` and `form-name` field to `initialValues` of the Formik form
 
 While the honeypot is a novel concept, it's not super-effective against spam bots, so check out the section on adding reCaptcha, which is a more robust solution.
 
-> :newspaper: In February 2019, Netflify [announced](https://www.netlify.com/blog/2019/02/12/improved-netlify-forms-spam-filtering-using-akismet/) that all form submissions will be filtered for spam, using Akismet. :tada: Huzzah huzzah! :tada:
+> :newspaper: In February 2019, Netflify [announced](https://www.netlify.com/blog/2019/02/12/improved-netlify-forms-spam-filtering-using-akismet/) that all form submissions will be filtered for spam, using Akismet. Huzzah huzzah! :tada:
 
 b) Add those (hidden) fields to the Formik form itself:
 
@@ -145,7 +145,7 @@ At this point, nothing happens until the user fills out and submits the form.
 
 Once reCaptcha is loaded, reCaptcha needs gets executed. The reason for running `execute()` is for the support of reCaptcha v2 invisible, which is set via the `size` attribute on the `Reaptcha` element.
 
-> :point_up: Only reCaptcha v2 invisible is documented here, but with a few tweaks you should be able to get other reCaptcha types (e.g. "I am not a robot") working.
+> :robot: Only reCaptcha v2 invisible is documented here, but with a few tweaks you should be able to get other reCaptcha types (e.g. "I am not a robot") working.
 
 In order to execute reCaptcha, a [React Ref Hook](https://reactjs.org/docs/hooks-reference.html#useref) has been setup for the `Reaptcha` element.
 
