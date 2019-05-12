@@ -18,7 +18,7 @@ You need to add a hidden HTML form that mimics the fields in your Formik form in
 
 ## Reading material
 
-[This](https://www.netlify.com/blog/2017/07/20/how-to-integrate-netlifys-form-handling-in-a-react-app/) is a very informative article; however--for me, at least--it took a while to realize that there needs to be a mirror HTML form in `/public/index.html` of the Formik form being rendered by React. And the info surrounding reCaptcha is a bit lean.
+[This](https://www.netlify.com/blog/2017/07/20/how-to-integrate-netlifys-form-handling-in-a-react-app/) is a very informative article; however--for me, at least--it took a while to realize that there needs to be a (hidden) mirror HTML form of the Formik form being rendered by React. And the info surrounding reCaptcha is a bit lean.
 
 Reading [this](https://community.netlify.com/t/common-issue-how-to-debug-your-form/92) may also be helpful.
 
