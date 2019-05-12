@@ -12,20 +12,20 @@ The problem is that forms rendered via React don't work out of the box with Netl
 
 ## tl;dr
 
-You need to add a hidden HTML form that mimics the fields in your Formik form to the `/public/index.html` file in the public directory, or Netlify forms won't work.
+You need to add a hidden HTML form that mimics the fields in your Formik form in order to get Netlify forms to work.
 
-> :point_up: Note that static site generators like Gatsby and Hugo are different beasts and require a different solution (they pretty much just work) than would a Create React App build. Documentation here is soley pertinent to CRA.
+> :point_up: Note that static site generators like Gatsby and Hugo are different creatures and require a different solution (they pretty much just work) than would a Create React App build. Documentation here is soley pertinent to CRA.
 
 ## Reading material
 
 [This](https://www.netlify.com/blog/2017/07/20/how-to-integrate-netlifys-form-handling-in-a-react-app/) is a very informative article; however--for me, at least--it took a while to realize that there needs to be a mirror HTML form in `/public/index.html` of the Formik form being rendered by React. And the info surrounding reCaptcha is a bit lean.
 
-Reading [this](https://community.netlify.com/t/common-issue-how-to-debug-your-form/92) can be helpful or send you off on a wild goose-chase or three.
+Reading [this](https://community.netlify.com/t/common-issue-how-to-debug-your-form/92) may also be helpful.
 
 ## Initial Setup (doesn't work out of the box)
 
 - [Create React App](https://github.com/facebook/create-react-app)
-- [Axios](https://www.npmjs.com/package/axios) ( with [ qs ](https://www.npmjs.com/package/qs) ) for the post
+- [Axios](https://www.npmjs.com/package/axios) with [qs](https://www.npmjs.com/package/qs) for the post
 - [Formik](https://www.npmjs.com/package/formik)
 
 Without extra setup, submitting a React form when hosted on Netlify will return a 404 error.
@@ -68,7 +68,7 @@ a) Add a `bot-field` and `form-name` field to `initialValues` of the Formik form
         }}
 ```
 
-While the honeypot is a novel concept, it's not super-effective against spam bots, so check out the section on adding reCaptcha, which is a more robust solution.
+While the honeypot is a novel concept, it's not super-effective against spam bots, so you might want to check out the section on adding reCaptcha, which is a more robust solution.
 
 > :newspaper: In February 2019, Netflify [announced](https://www.netlify.com/blog/2019/02/12/improved-netlify-forms-spam-filtering-using-akismet/) that all form submissions will be filtered for spam, using Akismet. Huzzah huzzah! :tada:
 
@@ -95,7 +95,7 @@ There are a lot of libraries out there for adding reCaptcha to a React site. And
 
 After a bit of trial and error, I settled on [reaptcha](https://www.npmjs.com/package/reaptcha). It's clean and documented well.
 
-There's actually only one key step to get reCaptcha working with Netlify Forms, which is to send the reCaptcha response token with your form data. The main work here is to get a hold of the Recaptcha response.
+There's actually only one key step to get reCaptcha working with Netlify Forms, which is to send the reCaptcha response token with your form data. The main work here is to get a hold of the Recaptcha response, so we can do just that.
 
 The steps are:
 
@@ -104,7 +104,7 @@ The steps are:
 3. Retrieve the reCaptcha response
 4. Submit the reCaptcha response along with the form data.
 
-To do that, this example leverages the built-in callback functions of `reaptcha` along with some React Hooks.
+To accomplish this, this example leverages the built-in callback functions of `reaptcha` along with some React Hooks.
 
 The `Reaptcha` block looks like this:
 
@@ -125,7 +125,7 @@ The `Reaptcha` block looks like this:
 
 `onLoad` is set as an attribute on the `Reaptcha` element in the `FormikForm.js` file.
 
-In this example, the `onLoad` callback function is used to load the `clearForm` action into a [React State Hook](https://reactjs.org/docs/hooks-reference.html#usestate):
+In this example, the `onLoad` callback function is used to load the `clearForm` action into a [React State Hook](https://reactjs.org/docs/hooks-reference.html#usestate) value, `resetForm`:
 
 ```jsx
 const onLoad = resetForm => {
@@ -135,15 +135,17 @@ const onLoad = resetForm => {
 };
 ```
 
-This is kinda hacky, but in order to clear the form after a successful form submission (or for some other reason), I wanted access to that action, which is passed down as a prop but not accessible outside of the Formik block scope.
+This is kinda hacky, but in order to clear the form after a successful form submission (or for some other reason), I wanted access to that action, which is passed down as a prop in the Formik block scope but is not accessible outside it.
 
-There may be a better way to do this, but I got bored thinking about it and moved on.
+There may be (probably is) a better way to do this, but I got bored thinking about it and moved on.
 
 At this point, nothing happens until the user fills out and submits the form.
 
 #### useRef
 
-Once reCaptcha is loaded, reCaptcha needs gets executed. The reason for running `execute()` is for the support of reCaptcha v2 invisible, which is set via the `size` attribute on the `Reaptcha` element.
+Once reCaptcha is loaded, reCaptcha needs gets executed "manually". Manually calling `execute()` is necessary for the support of reCaptcha v2 invisible, which is set via the `size` attribute on the `Reaptcha` element, because clicking on the reCaptcha widget is not possible when it's not visible.
+
+Though that may seem plainly obvious to some, I'll re-emphasize it anyhow: It's nature of the invisible reCaptcha beast to be invisible, and thus we must wire the user action of submitting the form to reCaptcha execution.
 
 > :robot: Only reCaptcha v2 invisible is documented here, but with a few tweaks you should be able to get other reCaptcha types (e.g. "I am not a robot") working.
 
@@ -166,7 +168,7 @@ onSubmit={values => {
 
 If you're familiar with Formik, this is where all the action usually happens; however, I've moved some of the action out of this function and into a separate function, `handleSubmit`, which gets triggered by a [React Effect Hook](https://reactjs.org/docs/hooks-reference.html#useeffect).
 
-The reason for separating this out is that there is a delay between executing reCaptcha, receiving the reCaptcha response, and putting it somewhere (e.g. state) where it can be accessed to inject into the form data. And I got tired of shooting blanks when submitting my form.
+The reason for separating this out is that there is a delay between executing reCaptcha, receiving the reCaptcha response, putting it somewhere (e.g. state) where it can be accessed, and having that value ready to inject into the form data on submission. And I got tired of shooting blanks when submitting my form.
 
 #### onVerify
 
