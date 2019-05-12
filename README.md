@@ -14,7 +14,7 @@ The problem is that forms rendered via React don't work out of the box with Netl
 
 You need to add a hidden HTML form that mimics the fields in your Formik form in order to get Netlify forms to work.
 
-> :point_up: Note that static site generators like Gatsby and Hugo are different creatures and require a different solution (they pretty much just work) than would a Create React App build. Documentation here is soley pertinent to CRA.
+> :point_up: Note that static site generators like Gatsby and Hugo are different creatures and require a different solution (they pretty much just work) than would a Create React App build. Documentation here is solely pertinent to CRA.
 
 ## Reading material
 
@@ -70,13 +70,13 @@ a) Add a `bot-field` and `form-name` field to `initialValues` of the Formik form
 
 While the honeypot is a novel concept, it's not super-effective against spam bots, so you might want to check out the section on adding reCaptcha, which is a more robust solution.
 
-> :newspaper: In February 2019, Netflify [announced](https://www.netlify.com/blog/2019/02/12/improved-netlify-forms-spam-filtering-using-akismet/) that all form submissions will be filtered for spam, using Akismet. Huzzah huzzah! :tada:
+> :newspaper: In February 2019, Netlify [announced](https://www.netlify.com/blog/2019/02/12/improved-netlify-forms-spam-filtering-using-akismet/) that all form submissions will be filtered for spam, using Akismet. Huzzah huzzah! :tada:
 
 b) Add those (hidden) fields to the Formik form itself:
 
 ```html
-<Field type="hidden" name="form-name" />
 <Field type="hidden" name="bot-field" />
+<Field type="hidden" name="form-name" />
 ```
 
 > :floppy_disk: The relevant code to see how this works can be found in `/public/index.html` and `FormikForm.js` within this repo.
@@ -85,7 +85,7 @@ b) Add those (hidden) fields to the Formik form itself:
 
 ### tl;dr
 
-Use a library to add Recaptcha (e.g. [reaptcha](https://www.npmjs.com/package/reaptcha)) and be sure to send the reCaptcha response along with your form submission.
+Use a library to add reCaptcha (e.g. [reaptcha](https://www.npmjs.com/package/reaptcha)) and be sure to send the reCaptcha response along with your form submission.
 
 > :scream: reCaptcha is notoriously easy to mistype, and `reaptcha` adds another nuance to the pot. I've used abbreviations in variable declarations to help avoid issues around that.
 
@@ -95,7 +95,7 @@ There are a lot of libraries out there for adding reCaptcha to a React site. And
 
 After a bit of trial and error, I settled on [reaptcha](https://www.npmjs.com/package/reaptcha). It's clean and documented well.
 
-There's actually only one key step to get reCaptcha working with Netlify Forms, which is to send the reCaptcha response token with your form data. The main work here is to get a hold of the Recaptcha response, so we can do just that.
+There's actually only one key step to get reCaptcha working with Netlify Forms, which is to send the reCaptcha response token with your form data. The main work here is to get a hold of the reCaptcha response, so we can do just that.
 
 The steps are:
 
