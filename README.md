@@ -143,7 +143,7 @@ At this point, nothing happens until the user fills out and submits the form.
 
 #### useRef
 
-Once reCaptcha is loaded, reCaptcha needs gets executed "manually". Manually calling `execute()` is necessary for the support of reCaptcha v2 invisible, which is set via the `size` attribute on the `Reaptcha` element, because clicking on the reCaptcha widget is not possible when it's not visible.
+Once reCaptcha is loaded, reCaptcha needs to get executed "manually". Manually calling `execute()` is necessary for the support of reCaptcha v2 invisible, which is set via the `size` attribute on the `Reaptcha` element, because clicking on the reCaptcha widget is not possible when it's not visible.
 
 Though that may seem plainly obvious to some, I'll re-emphasize it anyhow: It's nature of the invisible reCaptcha beast to be invisible, and thus we must wire the user action of submitting the form to reCaptcha execution.
 
@@ -155,7 +155,7 @@ In order to execute reCaptcha, a [React Ref Hook](https://reactjs.org/docs/hooks
 const rcRef = useRef(null);
 ```
 
-This, plus the ref attribute on the `Reaptcha` element, allows execute() to be called on `rcRef.current`, which is done when the form is submitted in the Formik `onSubmit` function.
+The above assignment, plus the associated ref attribute on the `Reaptcha` element, allows execute() to be called on `rcRef.current`, which is done when the form is submitted in the Formik `onSubmit` function.
 
 ```jsx
 onSubmit={values => {
@@ -168,7 +168,7 @@ onSubmit={values => {
 
 If you're familiar with Formik, this is where all the action usually happens; however, I've moved some of the action out of this function and into a separate function, `handleSubmit`, which gets triggered by a [React Effect Hook](https://reactjs.org/docs/hooks-reference.html#useeffect).
 
-The reason for separating this out is that there is a delay between executing reCaptcha, receiving the reCaptcha response, putting it somewhere (e.g. state) where it can be accessed, and having that value ready to inject into the form data on submission. And I got tired of shooting blanks when submitting my form.
+The reason for separating this out is that there is a delay between executing reCaptcha, receiving the reCaptcha response, putting it somewhere (e.g. state) where it can be accessed, and having that value ready to inject into the form data on submission. And I got tired of shooting blanks when submitting my form. There's probably a better way to do this as well.
 
 #### onVerify
 
